@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Home } from "@/screens/home";
+import { ThemeProvider, createTheme, useTheme } from "@rneui/themed";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const theme = createTheme({
+  lightColors: {
+    primary: "#e7e7e8",
+    background: "#ddd",
   },
+  darkColors: {
+    primary: "#000",
+  },
+  mode: "light",
 });
+
+const App = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Home />
+      </SafeAreaView>
+    </ThemeProvider>
+  );
+};
+
+export default App;
