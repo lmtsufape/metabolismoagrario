@@ -2,16 +2,7 @@ import { Home } from "@/screens/home";
 import { ThemeProvider, createTheme, useTheme } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const theme = createTheme({
-  lightColors: {
-    primary: "#e7e7e8",
-    background: "#ddd",
-  },
-  darkColors: {
-    primary: "#000",
-  },
-  mode: "light",
-});
+const theme = createTheme();
 
 const App = () => {
   return (

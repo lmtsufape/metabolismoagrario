@@ -1,3 +1,4 @@
+import { ConstantsModal } from "@/components/ConstantsModal/index";
 import { Button, Input, Text, useTheme } from "@rneui/themed";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
@@ -60,6 +61,8 @@ export function Home() {
           />
         )}
       />
+
+      <ConstantsModal />
 
       <Button size="lg" onPress={handleSubmit(onSubmit)}>
         Calcular
