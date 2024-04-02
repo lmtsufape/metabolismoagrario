@@ -1,6 +1,7 @@
 import { ConstantsModal } from "@/components/ConstantsModal/index";
 import { DimissableKeyboardView } from "@/components/DimissableKeyboardView";
 import { DropdownSelect } from "@/components/DropdownSelect";
+import { usePPLStore } from "@/stores/PPLStore";
 import { Button, Input, Text, useTheme } from "@rneui/themed";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -11,7 +12,7 @@ interface FormData {
   area: string;
 }
 
-export function Home() {
+export function Home({ navigation }: any) {
   const { theme } = useTheme();
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const { control, handleSubmit } = useForm<FormData>({
@@ -20,13 +21,19 @@ export function Home() {
       area: "0",
     },
   });
+  const pplConstants = usePPLStore((state) => state.constants);
+
+  // TODO on crop selected, fetch its constants and fill them with usePPLStore
 
   function onSubmit(data: FormData) {
     if (!selectedCrop) {
       Alert.alert("Selecione uma cultura!");
       return;
     }
-    Alert.alert(JSON.stringify({ ...data, selectedCrop }));
+    // TODO validate pplConstants as well
+    const fullData = { ...data, selectedCrop, pplConstants };
+    console.log(fullData);
+    navigation.navigate("Settings");
   }
 
   return (

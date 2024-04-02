@@ -1,48 +1,33 @@
+import { PPL_Constants, usePPLStore } from "@/stores/PPLStore";
 import { Text } from "@rneui/base";
 import { Button, Icon, Input } from "@rneui/themed";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
-import { Keyboard, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { useStyles } from "../styles";
 
-interface FormData {
-  HARVEST_INDEX: string;
-  AERIAL_RESIDUE_INDEX: string;
-  PRODUCT_RESIDUE_INDEX: string;
-  PRODUCT_DRY_MATTER_FACTOR: string;
-}
-
 export function ConstantsModal() {
-  const [isKeyboardOpen, setKeyboardStatus] = useState(false);
-  const styles = useStyles({ isKeyboardOpen });
+  const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
-  const { control, handleSubmit } = useForm<FormData>({
+  const [PPLConstants, setPPLConstants] = usePPLStore((state) => [state.constants, state.setConstants]);
+
+  const { control, getValues } = useForm<PPL_Constants>({
     defaultValues: {
       HARVEST_INDEX: "0",
       AERIAL_RESIDUE_INDEX: "0",
       PRODUCT_RESIDUE_INDEX: "0",
       PRODUCT_DRY_MATTER_FACTOR: "0",
+      RESIDUE_DRY_MATTER_FACTOR: "0",
+      BELOWGROUND_INDEX: "0",
+      WEED_AERIAL_FACTOR: "0",
+      WEED_BELOWGROUND_INDEX: "0",
     },
   });
 
-  // keyboard listener
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardStatus(true);
-    });
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardStatus(false);
-    });
-
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, []);
-
   function closeModal() {
     setOpen(!isOpen);
+    setPPLConstants(getValues());
   }
 
   /*
@@ -74,12 +59,20 @@ export function ConstantsModal() {
           <Icon name="chevron-down" type="font-awesome-5" />
           <Text h3>Definir Constantes</Text>
 
-          <View style={styles.formContainer}>
+          <ScrollView style={styles.formContainer}>
             <ConstantInput control={control} name="HARVEST_INDEX" label="Índice de colheita" />
             <ConstantInput control={control} name="AERIAL_RESIDUE_INDEX" label="Índice de resíduo da parte aérea" />
             <ConstantInput control={control} name="PRODUCT_RESIDUE_INDEX" label="Índice de resíduo do produto" />
             <ConstantInput control={control} name="PRODUCT_DRY_MATTER_FACTOR" label="Teor da matéria seca colhida" />
-          </View>
+            <ConstantInput control={control} name="RESIDUE_DRY_MATTER_FACTOR" label="Teor da matéria seca do resíduo" />
+            <ConstantInput control={control} name="BELOWGROUND_INDEX" label="Índice de raiz" />
+            <ConstantInput
+              control={control}
+              name="WEED_AERIAL_FACTOR"
+              label="Fator de conversão para estimar a biomassa aérea das adventícias"
+            />
+            <ConstantInput control={control} name="WEED_BELOWGROUND_INDEX" label="Índice de raiz adventícias" />
+          </ScrollView>
         </View>
       </ReactNativeModal>
     </>
@@ -87,8 +80,8 @@ export function ConstantsModal() {
 }
 
 interface ConstantInputProps {
-  control: Control<FormData, any>;
-  name: keyof FormData;
+  control: Control<PPL_Constants, any>;
+  name: keyof PPL_Constants;
   label: string;
 }
 function ConstantInput({ control, name, label }: ConstantInputProps) {

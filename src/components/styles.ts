@@ -1,12 +1,12 @@
 import { makeStyles } from "@rneui/themed";
 
-export const useStyles = makeStyles((theme, { isKeyboardOpen }: { isKeyboardOpen: boolean }) => ({
+export const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.colors.background,
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: isKeyboardOpen ? "96%" : "70%",
+    height: "90%",
   },
   formContainer: {
     width: "100%",
