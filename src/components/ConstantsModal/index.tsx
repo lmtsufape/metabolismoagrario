@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
-import { useStyles } from "../styles";
+import { useStyles } from "./styles";
 
 export function ConstantsModal() {
   const styles = useStyles();

@@ -5,7 +5,8 @@
     "paths": {
       "@/screens/*": ["./src/screens/*"],
       "@/components/*": ["./src/components/*"],
-      "@/stores/*": ["./src/stores/*"]
+      "@/stores/*": ["./src/stores/*"],
+      "@/models/*": ["./src/models/*"]
     }
   }
 }

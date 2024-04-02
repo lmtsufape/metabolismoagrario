@@ -2,17 +2,21 @@ import { ConstantsModal } from "@/components/ConstantsModal/index";
 import { DimissableKeyboardView } from "@/components/DimissableKeyboardView";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { usePPLStore } from "@/stores/PPLStore";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Input, Text, useTheme } from "@rneui/themed";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
+import { RootStackParamList } from "../Routes";
 
 interface FormData {
   harvestedProduction: string;
   area: string;
 }
 
-export function Home({ navigation }: any) {
+type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
+
+export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const { control, handleSubmit } = useForm<FormData>({
