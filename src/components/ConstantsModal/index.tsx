@@ -1,4 +1,4 @@
-import { PPL_Constants, usePPLStore } from "@/stores/PPLStore";
+import { usePPLStore } from "@/stores/PPLStore";
 import { Text } from "@rneui/base";
 import { Button, Icon, Input } from "@rneui/themed";
 import { useState } from "react";
@@ -6,13 +6,19 @@ import { Control, Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { useStyles } from "./styles";
+import { PPL_Constants } from "@/models/PPL";
+import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
+
+type PPL_Constants_Form = {
+  [key in keyof PPL_Constants]: string;
+};
 
 export function ConstantsModal() {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
   const [PPLConstants, setPPLConstants] = usePPLStore((state) => [state.constants, state.setConstants]);
 
-  const { control, getValues } = useForm<PPL_Constants>({
+  const { control, getValues } = useForm<PPL_Constants_Form>({
     defaultValues: {
       HARVEST_INDEX: "0",
       AERIAL_RESIDUE_INDEX: "0",
@@ -27,7 +33,7 @@ export function ConstantsModal() {
 
   function closeModal() {
     setOpen(!isOpen);
-    setPPLConstants(getValues());
+    setPPLConstants(convertFieldsToNumber(getValues()));
   }
 
   /*
@@ -80,8 +86,8 @@ export function ConstantsModal() {
 }
 
 interface ConstantInputProps {
-  control: Control<PPL_Constants, any>;
-  name: keyof PPL_Constants;
+  control: Control<PPL_Constants_Form, any>;
+  name: keyof PPL_Constants_Form;
   label: string;
 }
 function ConstantInput({ control, name, label }: ConstantInputProps) {

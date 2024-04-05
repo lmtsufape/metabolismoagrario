@@ -1,10 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home } from "./screens/Home";
-import { Settings } from "./screens/Settings";
+import { PPLResult } from "./screens/PPLResult";
+import { PPL } from "./models/PPL";
 
 export type RootStackParamList = {
   Home: undefined;
-  Settings: undefined;
+  PPLResult: {
+    ppl: PPL;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -13,7 +16,7 @@ export function Routes() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, statusBarTranslucent: true }}>
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="PPLResult" component={PPLResult} />
     </Stack.Navigator>
   );
 }

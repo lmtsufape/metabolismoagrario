@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
+import { PPL } from "@/models/PPL";
 
 interface FormData {
   harvestedProduction: string;
@@ -37,7 +38,17 @@ export function Home({ navigation }: NavigationProps) {
     // TODO validate pplConstants as well
     const fullData = { ...data, selectedCrop, pplConstants };
     console.log(fullData);
-    navigation.navigate("Settings");
+    const ppl = new PPL({
+      area: Number(data.area),
+      harvestedProduction: Number(data.harvestedProduction),
+      constants: pplConstants,
+      crop: {
+        id: selectedCrop,
+        name: "Arroz",
+        scientificName: "Solanum lycopersicum",
+      },
+    });
+    navigation.navigate("PPLResult", { ppl });
   }
 
   return (
