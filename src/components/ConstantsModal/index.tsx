@@ -6,34 +6,48 @@ import { Control, Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { useStyles } from "./styles";
-import { PPL_Constants } from "@/models/PPL";
 import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
+import { ConstantSelector } from "./ConstantSelector";
+import { Crop, PPL_Constants } from "@/types/index";
+import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 
 type PPL_Constants_Form = {
   [key in keyof PPL_Constants]: string;
 };
 
-export function ConstantsModal() {
+export function ConstantsModal({ crop }: { crop: Crop }) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
-  const [PPLConstants, setPPLConstants] = usePPLStore((state) => [state.constants, state.setConstants]);
+  const setPPLConstants = usePPLStore((state) => state.setConstants);
 
-  const { control, getValues } = useForm<PPL_Constants_Form>({
+  function setInitialConstantValue(type: keyof PPL_Constants) {
+    const constant = crop.constants.find((c) => c.type === type);
+    if (constant) {
+      return constant.value.toString();
+    }
+    return "0";
+  }
+
+  const { control, getValues, setValue } = useForm<PPL_Constants_Form>({
     defaultValues: {
-      HARVEST_INDEX: "0",
-      AERIAL_RESIDUE_INDEX: "0",
-      PRODUCT_RESIDUE_INDEX: "0",
-      PRODUCT_DRY_MATTER_FACTOR: "0",
-      RESIDUE_DRY_MATTER_FACTOR: "0",
-      BELOWGROUND_INDEX: "0",
-      WEED_AERIAL_FACTOR: "0",
-      WEED_BELOWGROUND_INDEX: "0",
+      HARVEST_INDEX: setInitialConstantValue("HARVEST_INDEX"),
+      AERIAL_RESIDUE_INDEX: setInitialConstantValue("AERIAL_RESIDUE_INDEX"),
+      PRODUCT_RESIDUE_INDEX: setInitialConstantValue("PRODUCT_RESIDUE_INDEX"),
+      PRODUCT_DRY_MATTER_FACTOR: setInitialConstantValue("PRODUCT_DRY_MATTER_FACTOR"),
+      RESIDUE_DRY_MATTER_FACTOR: setInitialConstantValue("RESIDUE_DRY_MATTER_FACTOR"),
+      BELOWGROUND_INDEX: setInitialConstantValue("BELOWGROUND_INDEX"),
+      WEED_AERIAL_FACTOR: setInitialConstantValue("WEED_AERIAL_FACTOR"),
+      WEED_BELOWGROUND_INDEX: setInitialConstantValue("WEED_BELOWGROUND_INDEX"),
     },
   });
 
   function closeModal() {
     setOpen(!isOpen);
     setPPLConstants(convertFieldsToNumber(getValues()));
+  }
+
+  function handleConstantValueSelected(type: keyof PPL_Constants, value: string) {
+    setValue(type, value);
   }
 
   /*
@@ -65,19 +79,106 @@ export function ConstantsModal() {
           <Icon name="chevron-down" type="font-awesome-5" />
           <Text h3>Definir Constantes</Text>
 
-          <ScrollView style={styles.formContainer}>
-            <ConstantInput control={control} name="HARVEST_INDEX" label="Índice de colheita" />
-            <ConstantInput control={control} name="AERIAL_RESIDUE_INDEX" label="Índice de resíduo da parte aérea" />
-            <ConstantInput control={control} name="PRODUCT_RESIDUE_INDEX" label="Índice de resíduo do produto" />
-            <ConstantInput control={control} name="PRODUCT_DRY_MATTER_FACTOR" label="Teor da matéria seca colhida" />
-            <ConstantInput control={control} name="RESIDUE_DRY_MATTER_FACTOR" label="Teor da matéria seca do resíduo" />
-            <ConstantInput control={control} name="BELOWGROUND_INDEX" label="Índice de raiz" />
-            <ConstantInput
-              control={control}
-              name="WEED_AERIAL_FACTOR"
-              label="Fator de conversão para estimar a biomassa aérea das adventícias"
-            />
-            <ConstantInput control={control} name="WEED_BELOWGROUND_INDEX" label="Índice de raiz adventícias" />
+          <ScrollView style={styles.formContainer} contentContainerStyle={{ alignItems: "center" }}>
+            <View style={styles.constantContainer}>
+              <ConstantInput control={control} name="HARVEST_INDEX" label={PPL_CONSTANTS_PT_BR["HARVEST_INDEX"]} />
+              <ConstantSelector
+                constantType="HARVEST_INDEX"
+                constants={crop.constants.filter((c) => c.type === "HARVEST_INDEX")}
+                onChange={(v) => handleConstantValueSelected("HARVEST_INDEX", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="AERIAL_RESIDUE_INDEX"
+                label={PPL_CONSTANTS_PT_BR["AERIAL_RESIDUE_INDEX"]}
+              />
+              <ConstantSelector
+                constantType="AERIAL_RESIDUE_INDEX"
+                constants={crop.constants.filter((c) => c.type === "AERIAL_RESIDUE_INDEX")}
+                onChange={(v) => handleConstantValueSelected("AERIAL_RESIDUE_INDEX", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="PRODUCT_RESIDUE_INDEX"
+                label={PPL_CONSTANTS_PT_BR["PRODUCT_RESIDUE_INDEX"]}
+              />
+              <ConstantSelector
+                constantType="PRODUCT_RESIDUE_INDEX"
+                constants={crop.constants.filter((c) => c.type === "PRODUCT_RESIDUE_INDEX")}
+                onChange={(v) => handleConstantValueSelected("PRODUCT_RESIDUE_INDEX", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="PRODUCT_DRY_MATTER_FACTOR"
+                label={PPL_CONSTANTS_PT_BR["PRODUCT_DRY_MATTER_FACTOR"]}
+              />
+              <ConstantSelector
+                constantType="PRODUCT_DRY_MATTER_FACTOR"
+                constants={crop.constants.filter((c) => c.type === "PRODUCT_DRY_MATTER_FACTOR")}
+                onChange={(v) => handleConstantValueSelected("PRODUCT_DRY_MATTER_FACTOR", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="RESIDUE_DRY_MATTER_FACTOR"
+                label={PPL_CONSTANTS_PT_BR["RESIDUE_DRY_MATTER_FACTOR"]}
+              />
+              <ConstantSelector
+                constantType="RESIDUE_DRY_MATTER_FACTOR"
+                constants={crop.constants.filter((c) => c.type === "RESIDUE_DRY_MATTER_FACTOR")}
+                onChange={(v) => handleConstantValueSelected("RESIDUE_DRY_MATTER_FACTOR", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="BELOWGROUND_INDEX"
+                label={PPL_CONSTANTS_PT_BR["BELOWGROUND_INDEX"]}
+              />
+              <ConstantSelector
+                constantType="BELOWGROUND_INDEX"
+                constants={crop.constants.filter((c) => c.type === "BELOWGROUND_INDEX")}
+                onChange={(v) => handleConstantValueSelected("BELOWGROUND_INDEX", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="WEED_AERIAL_FACTOR"
+                label={PPL_CONSTANTS_PT_BR["WEED_AERIAL_FACTOR"]}
+              />
+              <ConstantSelector
+                constantType="WEED_AERIAL_FACTOR"
+                constants={crop.constants.filter((c) => c.type === "WEED_AERIAL_FACTOR")}
+                onChange={(v) => handleConstantValueSelected("WEED_AERIAL_FACTOR", v)}
+              />
+            </View>
+
+            <View style={styles.constantContainer}>
+              <ConstantInput
+                control={control}
+                name="WEED_BELOWGROUND_INDEX"
+                label={PPL_CONSTANTS_PT_BR["WEED_BELOWGROUND_INDEX"]}
+              />
+              <ConstantSelector
+                constantType="WEED_BELOWGROUND_INDEX"
+                constants={crop.constants.filter((c) => c.type === "WEED_BELOWGROUND_INDEX")}
+                onChange={(v) => handleConstantValueSelected("WEED_BELOWGROUND_INDEX", v)}
+              />
+            </View>
           </ScrollView>
         </View>
       </ReactNativeModal>
@@ -99,7 +200,14 @@ function ConstantInput({ control, name, label }: ConstantInputProps) {
       }}
       name={name}
       render={({ field: { onChange, onBlur, value } }) => (
-        <Input label={label} keyboardType="numeric" onBlur={onBlur} onChangeText={onChange} value={value} />
+        <Input
+          label={label}
+          keyboardType="numeric"
+          onBlur={onBlur}
+          onChangeText={onChange}
+          value={value}
+          containerStyle={{ width: "80%" }}
+        />
       )}
     />
   );

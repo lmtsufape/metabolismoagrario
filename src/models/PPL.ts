@@ -1,15 +1,5 @@
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
-
-export type PPL_Constants = {
-  HARVEST_INDEX: number;
-  AERIAL_RESIDUE_INDEX: number;
-  PRODUCT_RESIDUE_INDEX: number;
-  PRODUCT_DRY_MATTER_FACTOR: number;
-  RESIDUE_DRY_MATTER_FACTOR: number;
-  BELOWGROUND_INDEX: number;
-  WEED_AERIAL_FACTOR: number;
-  WEED_BELOWGROUND_INDEX: number;
-}
+import { PPL_Constants } from "../types";
 
 type Crop = {
   id: string;
@@ -112,7 +102,7 @@ export class PPL {
   getBelowgroundBiomass(): PPlCalculationsReturn {
     const dryMatterBiomassTotal = this.getDryMatterBiomassTotal();
     return {
-      name: "Biomassa da parte subterrânea (raízes)",
+      name: "Biomassa das raízes",
       result: dryMatterBiomassTotal.result * this.constants.BELOWGROUND_INDEX,
       formula: `${dryMatterBiomassTotal.name} * ${PPL_CONSTANTS_PT_BR["BELOWGROUND_INDEX"]}`,
       calculation: `${dryMatterBiomassTotal.result} * ${this.constants.BELOWGROUND_INDEX}`
@@ -134,7 +124,7 @@ export class PPL {
   getWeedBelowgroundBiomass(): PPlCalculationsReturn {
     const weedAerialBiomass = this.getWeedAerialBiomass();
     return {
-      name: "Biomassa subterrânea das plantas adventícias",
+      name: "Biomassa das plantas adventícias (raízes)",
       result: weedAerialBiomass.result * this.constants.WEED_BELOWGROUND_INDEX,
       formula: `${weedAerialBiomass.name} * ${PPL_CONSTANTS_PT_BR["WEED_BELOWGROUND_INDEX"]}`,
       calculation: `${weedAerialBiomass.result} * ${this.constants.WEED_BELOWGROUND_INDEX}`

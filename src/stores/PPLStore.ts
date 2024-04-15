@@ -1,5 +1,5 @@
-import { PPL_Constants } from "@/models/PPL";
 import { create } from "zustand"
+import { PPL_Constants } from "../types"
 
 type StateProps = {
   constants: PPL_Constants

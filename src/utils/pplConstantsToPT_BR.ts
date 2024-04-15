@@ -1,4 +1,4 @@
-import { PPL_Constants } from "@/models/PPL";
+import { PPL_Constants } from "../types";
 
 
 export const PPL_CONSTANTS_PT_BR: Record<keyof PPL_Constants, string> = {

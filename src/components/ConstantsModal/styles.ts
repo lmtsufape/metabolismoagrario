@@ -12,5 +12,9 @@ export const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginVertical: theme.spacing.lg,
     paddingHorizontal: theme.spacing.md,
-  }
+  },
+  constantContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
 }));

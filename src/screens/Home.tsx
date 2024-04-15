@@ -9,6 +9,8 @@ import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
 import { PPL } from "@/models/PPL";
+import { mockedCrop } from "../mockData";
+import { Crop } from "../types";
 
 interface FormData {
   harvestedProduction: string;
@@ -27,6 +29,7 @@ export function Home({ navigation }: NavigationProps) {
     },
   });
   const pplConstants = usePPLStore((state) => state.constants);
+  const cropData = mockedCrop.crop as Crop;
 
   // TODO on crop selected, fetch its constants and fill them with usePPLStore
 
@@ -108,7 +111,7 @@ export function Home({ navigation }: NavigationProps) {
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
-          <ConstantsModal />
+          <ConstantsModal crop={cropData} />
           <Button size="lg" onPress={handleSubmit(onSubmit)}>
             Calcular
           </Button>
