@@ -1,24 +1,27 @@
-import { usePPLStore } from "@/stores/PPLStore";
+import { Crop, PPL_Constants } from "@/types/index";
+import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
+import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 import { Text } from "@rneui/base";
 import { Button, Icon, Input } from "@rneui/themed";
 import { useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
-import { useStyles } from "./styles";
-import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
 import { ConstantSelector } from "./ConstantSelector";
-import { Crop, PPL_Constants } from "@/types/index";
-import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
+import { useStyles } from "./styles";
 
 type PPL_Constants_Form = {
   [key in keyof PPL_Constants]: string;
 };
 
-export function ConstantsModal({ crop }: { crop: Crop }) {
+type Props = {
+  crop: Crop;
+  onSubmit: (values: PPL_Constants) => void;
+};
+
+export function ConstantsModal({ crop, onSubmit }: Props) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
-  const setPPLConstants = usePPLStore((state) => state.setConstants);
 
   function setInitialConstantValue(type: keyof PPL_Constants) {
     const constant = crop.constants.find((c) => c.type === type);
@@ -28,7 +31,7 @@ export function ConstantsModal({ crop }: { crop: Crop }) {
     return "0";
   }
 
-  const { control, getValues, setValue } = useForm<PPL_Constants_Form>({
+  const { control, handleSubmit, setValue } = useForm<PPL_Constants_Form>({
     defaultValues: {
       HARVEST_INDEX: setInitialConstantValue("HARVEST_INDEX"),
       AERIAL_RESIDUE_INDEX: setInitialConstantValue("AERIAL_RESIDUE_INDEX"),
@@ -42,8 +45,12 @@ export function ConstantsModal({ crop }: { crop: Crop }) {
   });
 
   function closeModal() {
-    setOpen(!isOpen);
-    setPPLConstants(convertFieldsToNumber(getValues()));
+    setOpen(false);
+  }
+
+  function handleSubmitForm(data: PPL_Constants_Form) {
+    closeModal();
+    onSubmit(convertFieldsToNumber(data));
   }
 
   function handleConstantValueSelected(type: keyof PPL_Constants, value: string) {
@@ -63,8 +70,8 @@ export function ConstantsModal({ crop }: { crop: Crop }) {
 
   return (
     <>
-      <Button onPress={() => setOpen(true)} type="clear">
-        Definir constantes
+      <Button size="lg" onPress={() => setOpen(true)} containerStyle={{ width: "80%", alignSelf: "center" }}>
+        Calcular
       </Button>
       <ReactNativeModal
         isVisible={isOpen}
@@ -180,6 +187,14 @@ export function ConstantsModal({ crop }: { crop: Crop }) {
               />
             </View>
           </ScrollView>
+
+          <Button
+            size="lg"
+            onPress={handleSubmit(handleSubmitForm)}
+            containerStyle={{ width: "80%", marginVertical: 20 }}
+          >
+            Continuar
+          </Button>
         </View>
       </ReactNativeModal>
     </>

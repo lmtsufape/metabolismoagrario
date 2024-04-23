@@ -1,16 +1,15 @@
 import { ConstantsModal } from "@/components/ConstantsModal/index";
 import { DimissableKeyboardView } from "@/components/DimissableKeyboardView";
 import { DropdownSelect } from "@/components/DropdownSelect";
-import { usePPLStore } from "@/stores/PPLStore";
+import { PPL } from "@/models/PPL";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, Input, Text, useTheme } from "@rneui/themed";
+import { Input, Text, useTheme } from "@rneui/themed";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
-import { PPL } from "@/models/PPL";
 import { mockedCrop } from "../mockData";
-import { Crop } from "../types";
+import { Crop, PPL_Constants } from "../types";
 
 interface FormData {
   harvestedProduction: string;
@@ -22,29 +21,28 @@ type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
 export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
-  const { control, handleSubmit } = useForm<FormData>({
+  const { control, getValues } = useForm<FormData>({
     defaultValues: {
       harvestedProduction: "0",
       area: "0",
     },
   });
-  const pplConstants = usePPLStore((state) => state.constants);
   const cropData = mockedCrop.crop as Crop;
 
   // TODO on crop selected, fetch its constants and fill them with usePPLStore
 
-  function onSubmit(data: FormData) {
+  function onSubmit(constants: PPL_Constants) {
     if (!selectedCrop) {
       Alert.alert("Selecione uma cultura!");
       return;
     }
     // TODO validate pplConstants as well
-    const fullData = { ...data, selectedCrop, pplConstants };
+    const fullData = { ...getValues(), selectedCrop, constants };
     console.log(fullData);
     const ppl = new PPL({
-      area: Number(data.area),
-      harvestedProduction: Number(data.harvestedProduction),
-      constants: pplConstants,
+      area: Number(fullData.area),
+      harvestedProduction: Number(fullData.harvestedProduction),
+      constants,
       crop: {
         id: selectedCrop,
         name: "Arroz",
@@ -111,10 +109,10 @@ export function Home({ navigation }: NavigationProps) {
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
-          <ConstantsModal crop={cropData} />
-          <Button size="lg" onPress={handleSubmit(onSubmit)}>
+          <ConstantsModal crop={cropData} onSubmit={(constants) => onSubmit(constants)} />
+          {/* <Button size="lg" onPress={handleSubmit(onSubmit)}>
             Calcular
-          </Button>
+          </Button> */}
         </View>
       </View>
     </DimissableKeyboardView>
