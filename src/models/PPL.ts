@@ -14,7 +14,7 @@ type Props = {
   harvestedProduction: number
 }
 
-type PPlCalculationsReturn = {
+export type PPlCalculationsReturn = {
   result: number
   formula: string
   name: string

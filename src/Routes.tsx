@@ -16,7 +16,14 @@ export function Routes() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, statusBarTranslucent: true }}>
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="PPLResult" component={PPLResult} />
+      <Stack.Screen
+        name="PPLResult"
+        component={PPLResult}
+        options={({ route }) => ({
+          headerShown: true,
+          headerTitle: `PPL - ${route.params.ppl.crop.name}`,
+        })}
+      />
     </Stack.Navigator>
   );
 }

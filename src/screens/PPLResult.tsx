@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { RootStackParamList } from "../Routes";
+import { CalculationResult } from "@/components/CalculationResult";
 
 type NavigationProps = NativeStackScreenProps<RootStackParamList, "PPLResult">;
 
@@ -18,74 +19,24 @@ export function PPLResult(props: NavigationProps) {
   const weedBelowgroundBiomass = PPL.getWeedBelowgroundBiomass();
 
   return (
-    <View style={{ padding: 4 }}>
-      <Text>
-        {productivity.name}: {productivity.result}
-      </Text>
-      <Text>{productivity.formula}</Text>
-      <Text>{productivity.calculation}</Text>
+    <ScrollView contentContainerStyle={{ gap: 10, paddingVertical: 10 }}>
+      <CalculationResult calcResult={productivity} />
 
-      <Text>--------------</Text>
+      <CalculationResult calcResult={totalAerialBiomass} />
 
-      <Text>
-        {totalAerialBiomass.name}: {totalAerialBiomass.result}
-      </Text>
-      <Text>{totalAerialBiomass.formula}</Text>
-      <Text>{totalAerialBiomass.calculation}</Text>
+      <CalculationResult calcResult={residueBiomass} />
 
-      <Text>--------------</Text>
+      <CalculationResult calcResult={dryMatterBiomass} />
 
-      <Text>
-        {residueBiomass.name}: {residueBiomass.result}
-      </Text>
-      <Text>{residueBiomass.formula}</Text>
-      <Text>{residueBiomass.calculation}</Text>
+      <CalculationResult calcResult={residueDryMatterBiomass} />
 
-      <Text>--------------</Text>
+      <CalculationResult calcResult={dryMatterBiomassTotal} />
 
-      <Text>
-        {dryMatterBiomass.name}: {dryMatterBiomass.result}
-      </Text>
-      <Text>{dryMatterBiomass.formula}</Text>
-      <Text>{dryMatterBiomass.calculation}</Text>
+      <CalculationResult calcResult={belowgroundBiomass} />
 
-      <Text>--------------</Text>
+      <CalculationResult calcResult={weedAerialBiomass} />
 
-      <Text>
-        {residueDryMatterBiomass.name}: {residueDryMatterBiomass.result}
-      </Text>
-      <Text>{residueDryMatterBiomass.formula}</Text>
-      <Text>{residueDryMatterBiomass.calculation}</Text>
-
-      <Text>--------------</Text>
-
-      <Text>
-        {dryMatterBiomassTotal.name}: {dryMatterBiomassTotal.result}
-      </Text>
-      <Text>{dryMatterBiomassTotal.formula}</Text>
-      <Text>{dryMatterBiomassTotal.calculation}</Text>
-
-      <Text>--------------</Text>
-
-      <Text>
-        {belowgroundBiomass.name}: {belowgroundBiomass.result}
-      </Text>
-      <Text>{belowgroundBiomass.formula}</Text>
-      <Text>{belowgroundBiomass.calculation}</Text>
-      <Text>--------------</Text>
-
-      <Text>
-        {weedAerialBiomass.name}: {weedAerialBiomass.result}
-      </Text>
-      <Text>{weedAerialBiomass.formula}</Text>
-      <Text>{weedAerialBiomass.calculation}</Text>
-      <Text>--------------</Text>
-
-      <Text>
-        {weedBelowgroundBiomass.name}: {weedBelowgroundBiomass.result}
-      </Text>
-      <Text>{weedBelowgroundBiomass.formula}</Text>
-      <Text>{weedBelowgroundBiomass.calculation}</Text>
-    </View>
+      <CalculationResult calcResult={weedBelowgroundBiomass} />
+    </ScrollView>
   );
 }

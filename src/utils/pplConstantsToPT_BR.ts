@@ -8,6 +8,6 @@ export const PPL_CONSTANTS_PT_BR: Record<keyof PPL_Constants, string> = {
   PRODUCT_DRY_MATTER_FACTOR: "Teor da matéria seca colhida",
   RESIDUE_DRY_MATTER_FACTOR: "Teor da matéria seca resíduo",
   BELOWGROUND_INDEX: "Índice de raiz",
-  WEED_AERIAL_FACTOR: "Fator de conversão - Biomassa aérea adventícias",
+  WEED_AERIAL_FACTOR: "Fator de conversão: Biomassa aérea adventícias",
   WEED_BELOWGROUND_INDEX: "Índice de raiz adventícias"
 }
