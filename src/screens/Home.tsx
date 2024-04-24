@@ -10,6 +10,7 @@ import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
 import { mockedCrop } from "../mockData";
 import { Crop, PPL_Constants } from "../types";
+import { NumericInput } from "@/components/NumericInput";
 
 interface FormData {
   harvestedProduction: string;
@@ -36,7 +37,7 @@ export function Home({ navigation }: NavigationProps) {
       Alert.alert("Selecione uma cultura!");
       return;
     }
-    // TODO validate pplConstants as well
+
     const fullData = { ...getValues(), selectedCrop, constants };
     console.log(fullData);
     const ppl = new PPL({
@@ -56,7 +57,7 @@ export function Home({ navigation }: NavigationProps) {
     <DimissableKeyboardView>
       <View style={{ flex: 1, padding: theme.spacing.lg, justifyContent: "space-between" }}>
         <View style={{ gap: theme.spacing.lg }}>
-          <Text h1 style={{ textAlign: "center" }}>
+          <Text h1 style={{ textAlign: "center", color: theme.colors.primary, textDecorationLine: "underline" }}>
             PPL - Calculadora
           </Text>
 
@@ -76,17 +77,10 @@ export function Home({ navigation }: NavigationProps) {
             control={control}
             rules={{
               required: true,
-              // validate: (value) => Number(value) > 0,
             }}
             name="harvestedProduction"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Produção colhida (t de massa fresca)"
-                keyboardType="numeric"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
+            render={({ field: { ref, ...rest } }) => (
+              <NumericInput label="Produção colhida (t de massa fresca)" {...rest} />
             )}
           />
 
@@ -96,23 +90,12 @@ export function Home({ navigation }: NavigationProps) {
               required: true,
             }}
             name="area"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Área plantada (ha)"
-                keyboardType="numeric"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
+            render={({ field: { ref, ...rest } }) => <NumericInput label="Área plantada (ha)" {...rest} />}
           />
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
           <ConstantsModal crop={cropData} onSubmit={(constants) => onSubmit(constants)} />
-          {/* <Button size="lg" onPress={handleSubmit(onSubmit)}>
-            Calcular
-          </Button> */}
         </View>
       </View>
     </DimissableKeyboardView>

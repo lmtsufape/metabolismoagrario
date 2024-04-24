@@ -9,6 +9,7 @@ import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { ConstantSelector } from "./ConstantSelector";
 import { useStyles } from "./styles";
+import { NumericInput } from "../NumericInput";
 
 type PPL_Constants_Form = {
   [key in keyof PPL_Constants]: string;
@@ -49,6 +50,8 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
   }
 
   function handleSubmitForm(data: PPL_Constants_Form) {
+    // TODO validate data
+
     closeModal();
     onSubmit(convertFieldsToNumber(data));
   }
@@ -214,15 +217,8 @@ function ConstantInput({ control, name, label }: ConstantInputProps) {
         required: true,
       }}
       name={name}
-      render={({ field: { onChange, onBlur, value } }) => (
-        <Input
-          label={label}
-          keyboardType="numeric"
-          onBlur={onBlur}
-          onChangeText={onChange}
-          value={value}
-          containerStyle={{ width: "80%" }}
-        />
+      render={({ field: { ref, ...rest } }) => (
+        <NumericInput label={label} containerStyle={{ width: "80%" }} {...rest} />
       )}
     />
   );
