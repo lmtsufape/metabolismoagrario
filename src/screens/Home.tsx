@@ -11,6 +11,9 @@ import { RootStackParamList } from "../Routes";
 import { mockedCrop } from "../mockData";
 import { Crop, PPL_Constants } from "../types";
 import { NumericInput } from "@/components/NumericInput";
+import { useQuery } from "@tanstack/react-query";
+import { getCropsDetails, getCropsList } from "../services/api";
+import { Button } from "@rneui/base";
 
 interface FormData {
   harvestedProduction: string;
@@ -21,35 +24,44 @@ type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
-  const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
+  const [selectedCropId, setSelectedCropId] = useState<string | null>(null);
   const { control, getValues } = useForm<FormData>({
     defaultValues: {
       harvestedProduction: "0",
       area: "0",
     },
   });
-  const cropData = mockedCrop.crop as Crop;
 
-  // TODO on crop selected, fetch its constants and fill them with usePPLStore
+  const cropsListQuery = useQuery({
+    queryKey: ["CROPS"],
+    queryFn: getCropsList,
+  });
+
+  const cropsConstantsQuery = useQuery({
+    queryKey: ["CROPS", selectedCropId],
+    queryFn: () => getCropsDetails(selectedCropId!),
+    enabled: selectedCropId !== null,
+  });
 
   function onSubmit(constants: PPL_Constants) {
-    if (!selectedCrop) {
-      Alert.alert("Selecione uma cultura!");
+    const area = Number(getValues().area);
+    const harvestedProduction = Number(getValues().harvestedProduction);
+
+    if (area <= 0 || harvestedProduction <= 0) {
+      Alert.alert("Por favor, preencha os campos de Produção e Área!");
       return;
     }
 
-    const fullData = { ...getValues(), selectedCrop, constants };
+    const fullData = { area, harvestedProduction, selectedCrop: selectedCropId, constants };
     console.log(fullData);
+
     const ppl = new PPL({
-      area: Number(fullData.area),
-      harvestedProduction: Number(fullData.harvestedProduction),
+      area,
+      harvestedProduction,
       constants,
-      crop: {
-        id: selectedCrop,
-        name: "Arroz",
-        scientificName: "Solanum lycopersicum",
-      },
+      crop: cropsListQuery.data!.find((c) => c.id === selectedCropId)!,
     });
+
     navigation.navigate("PPLResult", { ppl });
   }
 
@@ -57,19 +69,24 @@ export function Home({ navigation }: NavigationProps) {
     <DimissableKeyboardView>
       <View style={{ flex: 1, padding: theme.spacing.lg, justifyContent: "space-between" }}>
         <View style={{ gap: theme.spacing.lg }}>
-          <Text h1 style={{ textAlign: "center", color: theme.colors.primary, textDecorationLine: "underline" }}>
+          <Text
+            h1
+            style={{
+              textAlign: "center",
+              color: theme.colors.primary,
+              textDecorationLine: "underline",
+              marginBottom: theme.spacing.lg,
+            }}
+          >
             PPL - Calculadora
           </Text>
 
           <View style={{ marginHorizontal: 10, gap: 4, paddingBottom: 24 }}>
             <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Cultura</Text>
             <DropdownSelect
-              items={[
-                { id: "2", label: "Arroz" },
-                { id: "1", label: "Tomate" },
-                { id: "3", label: "Cana de Açucar" },
-              ]}
-              onSelect={(c) => setSelectedCrop(c)}
+              loading={cropsListQuery.isLoading}
+              items={cropsListQuery.data ?? []}
+              onSelect={(c) => setSelectedCropId(c)}
             />
           </View>
 
@@ -95,7 +112,17 @@ export function Home({ navigation }: NavigationProps) {
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
-          <ConstantsModal crop={cropData} onSubmit={(constants) => onSubmit(constants)} />
+          {selectedCropId ? (
+            <ConstantsModal crop={cropsConstantsQuery.data?.crop} onSubmit={(constants) => onSubmit(constants)} />
+          ) : (
+            <Button
+              size="lg"
+              onPress={() => Alert.alert("Selecione uma cultura!")}
+              containerStyle={{ width: "80%", alignSelf: "center" }}
+            >
+              Calcular
+            </Button>
+          )}
         </View>
       </View>
     </DimissableKeyboardView>

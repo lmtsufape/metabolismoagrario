@@ -1,7 +1,7 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ScrollView, Text, View } from "react-native";
-import { RootStackParamList } from "../Routes";
 import { CalculationResult } from "@/components/CalculationResult";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ScrollView } from "react-native";
+import { RootStackParamList } from "../Routes";
 
 type NavigationProps = NativeStackScreenProps<RootStackParamList, "PPLResult">;
 

@@ -10,6 +10,14 @@ export function CalculationResult({ calcResult }: Props) {
   const { theme } = useTheme();
   const styles = useStyles();
 
+  function parseResult(result: number) {
+    if (isNaN(result)) return "--";
+
+    if (!isFinite(result)) return "∞";
+
+    return result.toFixed(2);
+  }
+
   return (
     <View
       style={{
@@ -22,7 +30,7 @@ export function CalculationResult({ calcResult }: Props) {
       }}
     >
       <Text style={{ fontSize: 18, fontWeight: "normal", textAlign: "center", ...styles.text }}>
-        {calcResult.name}: <Text style={{ fontWeight: "bold", ...styles.text }}>{calcResult.result}</Text>
+        {calcResult.name}: <Text style={{ fontWeight: "bold", ...styles.text }}>{parseResult(calcResult.result)}</Text>
       </Text>
 
       <Text style={{ fontStyle: "italic", ...styles.text }}>

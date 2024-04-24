@@ -2,8 +2,10 @@ export type Crop = {
   id: string
   name: string
   scientificName: string
-  createdAt: string
-  updatedAt: string
+  // createdAt: string
+  // updatedAt: string
+}
+export type CropWithConstant = Crop & {
   constants: CropConstant[]
 }
 

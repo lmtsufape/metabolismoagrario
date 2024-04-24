@@ -1,22 +1,22 @@
-import { Crop, PPL_Constants } from "@/types/index";
+import { CropWithConstant, PPL_Constants } from "@/types/index";
 import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 import { Text } from "@rneui/base";
-import { Button, Icon, Input } from "@rneui/themed";
-import { useState } from "react";
+import { Button, Icon } from "@rneui/themed";
+import { useEffect, useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
+import { NumericInput } from "../NumericInput";
 import { ConstantSelector } from "./ConstantSelector";
 import { useStyles } from "./styles";
-import { NumericInput } from "../NumericInput";
 
 type PPL_Constants_Form = {
   [key in keyof PPL_Constants]: string;
 };
 
 type Props = {
-  crop: Crop;
+  crop?: CropWithConstant;
   onSubmit: (values: PPL_Constants) => void;
 };
 
@@ -25,14 +25,14 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
   const [isOpen, setOpen] = useState(false);
 
   function setInitialConstantValue(type: keyof PPL_Constants) {
-    const constant = crop.constants.find((c) => c.type === type);
+    const constant = crop?.constants.find((c) => c.type === type);
     if (constant) {
       return constant.value.toString();
     }
     return "0";
   }
 
-  const { control, handleSubmit, setValue } = useForm<PPL_Constants_Form>({
+  const { control, handleSubmit, setValue, reset } = useForm<PPL_Constants_Form>({
     defaultValues: {
       HARVEST_INDEX: setInitialConstantValue("HARVEST_INDEX"),
       AERIAL_RESIDUE_INDEX: setInitialConstantValue("AERIAL_RESIDUE_INDEX"),
@@ -44,6 +44,21 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
       WEED_BELOWGROUND_INDEX: setInitialConstantValue("WEED_BELOWGROUND_INDEX"),
     },
   });
+
+  useEffect(() => {
+    if (crop) {
+      reset({
+        HARVEST_INDEX: setInitialConstantValue("HARVEST_INDEX"),
+        AERIAL_RESIDUE_INDEX: setInitialConstantValue("AERIAL_RESIDUE_INDEX"),
+        PRODUCT_RESIDUE_INDEX: setInitialConstantValue("PRODUCT_RESIDUE_INDEX"),
+        PRODUCT_DRY_MATTER_FACTOR: setInitialConstantValue("PRODUCT_DRY_MATTER_FACTOR"),
+        RESIDUE_DRY_MATTER_FACTOR: setInitialConstantValue("RESIDUE_DRY_MATTER_FACTOR"),
+        BELOWGROUND_INDEX: setInitialConstantValue("BELOWGROUND_INDEX"),
+        WEED_AERIAL_FACTOR: setInitialConstantValue("WEED_AERIAL_FACTOR"),
+        WEED_BELOWGROUND_INDEX: setInitialConstantValue("WEED_BELOWGROUND_INDEX"),
+      });
+    }
+  }, [crop]);
 
   function closeModal() {
     setOpen(false);
@@ -70,6 +85,13 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
     Weed_aerial_factor // Fator de conversão para estimar a biomassa aérea das adventícias (where in the sheet?)
     Weed_belowground_index // Índice de raiz adventícias (where in the sheet?)
   */
+
+  if (crop === undefined)
+    return (
+      <Button size="lg" disabled containerStyle={{ width: "80%", alignSelf: "center" }}>
+        Buscando constantes...
+      </Button>
+    );
 
   return (
     <>

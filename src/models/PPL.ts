@@ -1,11 +1,5 @@
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
-import { PPL_Constants } from "../types";
-
-type Crop = {
-  id: string;
-  name: string;
-  scientificName: string;
-}
+import { Crop, PPL_Constants } from "../types";
 
 type Props = {
   crop: Crop
