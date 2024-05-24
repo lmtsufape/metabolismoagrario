@@ -96,7 +96,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
   return (
     <>
       <Button size="lg" onPress={() => setOpen(true)} containerStyle={{ width: "80%", alignSelf: "center" }}>
-        Calcular
+        Continuar
       </Button>
       <ReactNativeModal
         isVisible={isOpen}
@@ -218,7 +218,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
             onPress={handleSubmit(handleSubmitForm)}
             containerStyle={{ width: "80%", marginVertical: 20 }}
           >
-            Continuar
+            Calcular
           </Button>
         </View>
       </ReactNativeModal>

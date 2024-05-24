@@ -1,6 +1,6 @@
 import axios from "axios";
 import Constants from "expo-constants";
-import { Crop, CropWithConstant } from "../types";
+import { Climates, Crop, CropWithConstant } from "../types";
 
 
 let API_URL = ''
@@ -24,15 +24,16 @@ export const API = axios.create({
 
 // ROUTES 
 
+type CropsListReturn = Record<Climates, Crop[]>
 export async function getCropsList() {
   // fake delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  const { data } = await API.get<Omit<Crop, 'constants'>[]>("/crops");
+  await new Promise(resolve => setTimeout(resolve, 2000)); // TODO remove
+  const { data } = await API.get<CropsListReturn>("/crops");
   return data
 }
 
 export async function getCropsDetails(id: string) {
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 2000)); // TODO remove
   const { data } = await API.get<{ crop: CropWithConstant }>(`/crops/${id}`);
   return data
 }

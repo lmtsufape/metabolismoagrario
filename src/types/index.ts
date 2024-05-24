@@ -29,3 +29,17 @@ export type CropConstant = {
   // createdAt: string
   // updatedAt: string
 }
+
+export enum Climates {
+  TropicalRainforest = "TropicalRainforest", // Equatorial
+  Tropical = "Tropical", // Tropical
+  Subtropical = "Subtropical", // Subtropical
+  Desert = "Desert", // Deserto
+  Temperate = "Temperate", // Temperado
+  Mediterranean = "Mediterranean", // Mediterrâneo
+  SemiArid = "SemiArid", // Semiárido
+  Subpolar = "Subpolar", // Frio
+  MountainCold = "MountainCold", // Frio da montanha
+  Polar = "Polar", // Polar
+}
+

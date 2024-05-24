@@ -1,19 +1,18 @@
 import { ConstantsModal } from "@/components/ConstantsModal/index";
+import { CropSelector } from "@/components/CropSelector";
 import { DimissableKeyboardView } from "@/components/DimissableKeyboardView";
-import { DropdownSelect } from "@/components/DropdownSelect";
+import { NumericInput } from "@/components/NumericInput";
 import { PPL } from "@/models/PPL";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Input, Text, useTheme } from "@rneui/themed";
+import { Button } from "@rneui/base";
+import { Text, useTheme } from "@rneui/themed";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
-import { mockedCrop } from "../mockData";
+import { getCropsDetails } from "../services/api";
 import { Crop, PPL_Constants } from "../types";
-import { NumericInput } from "@/components/NumericInput";
-import { useQuery } from "@tanstack/react-query";
-import { getCropsDetails, getCropsList } from "../services/api";
-import { Button } from "@rneui/base";
 
 interface FormData {
   harvestedProduction: string;
@@ -24,7 +23,7 @@ type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
-  const [selectedCropId, setSelectedCropId] = useState<string | null>(null);
+  const [selectedCrop, setSelectedCrop] = useState<Crop | null>(null);
   const { control, getValues } = useForm<FormData>({
     defaultValues: {
       harvestedProduction: "0",
@@ -32,15 +31,10 @@ export function Home({ navigation }: NavigationProps) {
     },
   });
 
-  const cropsListQuery = useQuery({
-    queryKey: ["CROPS"],
-    queryFn: getCropsList,
-  });
-
   const cropsConstantsQuery = useQuery({
-    queryKey: ["CROPS", selectedCropId],
-    queryFn: () => getCropsDetails(selectedCropId!),
-    enabled: selectedCropId !== null,
+    queryKey: ["CROPS", selectedCrop],
+    queryFn: () => getCropsDetails(selectedCrop!.id),
+    enabled: selectedCrop !== null,
   });
 
   function onSubmit(constants: PPL_Constants) {
@@ -52,14 +46,14 @@ export function Home({ navigation }: NavigationProps) {
       return;
     }
 
-    const fullData = { area, harvestedProduction, selectedCrop: selectedCropId, constants };
+    const fullData = { area, harvestedProduction, selectedCrop: selectedCrop, constants };
     console.log(fullData);
 
     const ppl = new PPL({
       area,
       harvestedProduction,
       constants,
-      crop: cropsListQuery.data!.find((c) => c.id === selectedCropId)!,
+      crop: selectedCrop!,
     });
 
     navigation.navigate("PPLResult", { ppl });
@@ -83,11 +77,7 @@ export function Home({ navigation }: NavigationProps) {
 
           <View style={{ marginHorizontal: 10, gap: 4, paddingBottom: 24 }}>
             <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Cultura</Text>
-            <DropdownSelect
-              loading={cropsListQuery.isLoading}
-              items={cropsListQuery.data ?? []}
-              onSelect={(c) => setSelectedCropId(c)}
-            />
+            <CropSelector selectedCrop={selectedCrop} onSelect={(c) => setSelectedCrop(c)} />
           </View>
 
           <Controller
@@ -112,7 +102,7 @@ export function Home({ navigation }: NavigationProps) {
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
-          {selectedCropId ? (
+          {selectedCrop ? (
             <ConstantsModal crop={cropsConstantsQuery.data?.crop} onSubmit={(constants) => onSubmit(constants)} />
           ) : (
             <Button
@@ -120,7 +110,7 @@ export function Home({ navigation }: NavigationProps) {
               onPress={() => Alert.alert("Selecione uma cultura!")}
               containerStyle={{ width: "80%", alignSelf: "center" }}
             >
-              Calcular
+              Continuar
             </Button>
           )}
         </View>
