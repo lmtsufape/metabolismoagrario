@@ -10,6 +10,7 @@ type Props = {
 
 export type PPlCalculationsReturn = {
   result: number
+  unity: string
   formula: string
   name: string
   calculation: string
@@ -32,6 +33,7 @@ export class PPL {
     return {
       name: "Produtividade MF",
       result: this.harvestedProduction / this.area,
+      unity: '(t/ha)',
       formula: `Produção colhida / área`, // --> harvestedProduction / area
       calculation: `${this.harvestedProduction} / ${this.area}`
     }
@@ -42,6 +44,7 @@ export class PPL {
     return {
       name: "Biomassa aérea total",
       result: productivity.result / this.constants.HARVEST_INDEX,
+      unity: '(t/ha)',
       formula: `${productivity.name} / ${PPL_CONSTANTS_PT_BR["HARVEST_INDEX"]}`,
       calculation: `${productivity.result} / ${this.constants.HARVEST_INDEX}`
     }
@@ -52,6 +55,7 @@ export class PPL {
     return {
       name: "Biomassa do resíduo",
       result: this.constants.AERIAL_RESIDUE_INDEX * totalAerialBiomass.result,
+      unity: '(t/ha)',
       formula: `${PPL_CONSTANTS_PT_BR["AERIAL_RESIDUE_INDEX"]} * ${totalAerialBiomass.name}`,
       calculation: `${this.constants.AERIAL_RESIDUE_INDEX} * ${totalAerialBiomass.result}`
     }
@@ -64,6 +68,7 @@ export class PPL {
     return {
       name: "Biomassa colhida em matéria seca",
       result: productivity.result * this.constants.PRODUCT_DRY_MATTER_FACTOR,
+      unity: '(t/ha)',
       formula: `${productivity.name} * ${PPL_CONSTANTS_PT_BR["PRODUCT_DRY_MATTER_FACTOR"]}`,
       calculation: `${productivity.result} * ${this.constants.PRODUCT_DRY_MATTER_FACTOR}`
     }
@@ -75,6 +80,7 @@ export class PPL {
     return {
       name: "Biomassa do resíduo em matéria seca",
       result: productivity.result * this.constants.RESIDUE_DRY_MATTER_FACTOR,
+      unity: '(t/ha)',
       formula: `${productivity.name} * ${PPL_CONSTANTS_PT_BR["RESIDUE_DRY_MATTER_FACTOR"]}`,
       calculation: `${productivity.result} * ${this.constants.RESIDUE_DRY_MATTER_FACTOR}`
     }
@@ -87,6 +93,7 @@ export class PPL {
     return {
       name: "Biomassa em matéria seca",
       result: dryMatterBiomass.result + residueDryMatterBiomass.result,
+      unity: '(t/ha)',
       formula: `${dryMatterBiomass.name} + ${residueDryMatterBiomass.name}`,
       calculation: `${dryMatterBiomass.result} + ${residueDryMatterBiomass.result}`
     }
@@ -98,6 +105,7 @@ export class PPL {
     return {
       name: "Biomassa das raízes",
       result: dryMatterBiomassTotal.result * this.constants.BELOWGROUND_INDEX,
+      unity: '(t/ha)',
       formula: `${dryMatterBiomassTotal.name} * ${PPL_CONSTANTS_PT_BR["BELOWGROUND_INDEX"]}`,
       calculation: `${dryMatterBiomassTotal.result} * ${this.constants.BELOWGROUND_INDEX}`
     }
@@ -109,6 +117,7 @@ export class PPL {
     return {
       name: "Biomassa aérea das plantas adventícias",
       result: this.constants.WEED_AERIAL_FACTOR * dryMatterBiomass.result,
+      unity: '(t/ha)',
       formula: `${PPL_CONSTANTS_PT_BR["WEED_AERIAL_FACTOR"]} * ${dryMatterBiomass.name}`,
       calculation: `${this.constants.WEED_AERIAL_FACTOR} * ${dryMatterBiomass.result}`
     }
@@ -120,6 +129,7 @@ export class PPL {
     return {
       name: "Biomassa das plantas adventícias (raízes)",
       result: weedAerialBiomass.result * this.constants.WEED_BELOWGROUND_INDEX,
+      unity: '(t/ha)',
       formula: `${weedAerialBiomass.name} * ${PPL_CONSTANTS_PT_BR["WEED_BELOWGROUND_INDEX"]}`,
       calculation: `${weedAerialBiomass.result} * ${this.constants.WEED_BELOWGROUND_INDEX}`
     }

@@ -30,7 +30,11 @@ export function CalculationResult({ calcResult }: Props) {
       }}
     >
       <Text style={{ fontSize: 18, fontWeight: "normal", textAlign: "center", ...styles.text }}>
-        {calcResult.name}: <Text style={{ fontWeight: "bold", ...styles.text }}>{parseResult(calcResult.result)}</Text>
+        {calcResult.name}:{" "}
+        <Text style={{ fontWeight: "bold", ...styles.text }}>
+          {parseResult(calcResult.result)}
+          {" " + calcResult.unity}
+        </Text>
       </Text>
 
       <Text style={{ fontStyle: "italic", ...styles.text }}>
