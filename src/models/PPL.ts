@@ -1,8 +1,9 @@
+import { PPL_Constants } from "@/types/CultivarConstants";
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
-import { Crop, PPL_Constants } from "../types";
+import { Cultivar } from "../types";
 
 type Props = {
-  crop: Crop
+  cultivar: Cultivar
   constants: PPL_Constants
   area: number
   harvestedProduction: number
@@ -17,13 +18,13 @@ export type PPlCalculationsReturn = {
 }
 
 export class PPL {
-  crop: Crop
+  cultivar: Cultivar
   constants: PPL_Constants
   area: number
   harvestedProduction: number
 
   constructor(props: Props) {
-    this.crop = props.crop
+    this.cultivar = props.cultivar
     this.constants = props.constants
     this.area = props.area
     this.harvestedProduction = props.harvestedProduction

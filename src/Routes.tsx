@@ -21,7 +21,7 @@ export function Routes() {
         component={PPLResult}
         options={({ route }) => ({
           headerShown: true,
-          headerTitle: `PPL - ${route.params.ppl.crop.name}`,
+          headerTitle: `PPL - ${route.params.ppl.cultivar.name}`,
         })}
       />
     </Stack.Navigator>

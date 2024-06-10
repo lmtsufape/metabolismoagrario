@@ -1,4 +1,4 @@
-import { Climates } from "../types";
+import { Climates } from "@/types/CultivarConstants";
 
 export const CLIMATES_TO_PT_BR: Record<Climates, string> = {
   "TropicalRainforest": "Equatorial",

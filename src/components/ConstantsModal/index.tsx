@@ -1,12 +1,15 @@
-import { CropWithConstant, PPL_Constants } from "@/types/index";
+import { PPL_Constants } from "@/types/CultivarConstants";
+import { Cultivar } from "@/types/index";
 import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 import { Text } from "@rneui/base";
 import { Button, Icon } from "@rneui/themed";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
+import { getCultivarDetails } from "../../services/api";
 import { NumericInput } from "../NumericInput";
 import { ConstantSelector } from "./ConstantSelector";
 import { useStyles } from "./styles";
@@ -16,16 +19,24 @@ type PPL_Constants_Form = {
 };
 
 type Props = {
-  crop?: CropWithConstant;
+  selectedCultivar: Cultivar | null;
   onSubmit: (values: PPL_Constants) => void;
 };
 
-export function ConstantsModal({ crop, onSubmit }: Props) {
+export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
 
+  const cultivarDetailsQuery = useQuery({
+    queryKey: ["CULTIVAR", selectedCultivar?.id],
+    queryFn: () => getCultivarDetails(selectedCultivar!.id),
+    enabled: selectedCultivar !== null,
+  });
+
+  const cultivarData = cultivarDetailsQuery.data;
+
   function setInitialConstantValue(type: keyof PPL_Constants) {
-    const constant = crop?.constants.find((c) => c.type === type);
+    const constant = cultivarData?.constants.find((c) => c.type === type);
     if (constant) {
       return constant.value.toString();
     }
@@ -46,7 +57,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
   });
 
   useEffect(() => {
-    if (crop) {
+    if (cultivarData) {
       reset({
         HARVEST_INDEX: setInitialConstantValue("HARVEST_INDEX"),
         AERIAL_RESIDUE_INDEX: setInitialConstantValue("AERIAL_RESIDUE_INDEX"),
@@ -58,7 +69,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
         WEED_BELOWGROUND_INDEX: setInitialConstantValue("WEED_BELOWGROUND_INDEX"),
       });
     }
-  }, [crop]);
+  }, [cultivarData]);
 
   function closeModal() {
     setOpen(false);
@@ -86,7 +97,18 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
     Weed_belowground_index // Índice de raiz adventícias (where in the sheet?)
   */
 
-  if (crop === undefined)
+  if (selectedCultivar === null)
+    return (
+      <Button
+        size="lg"
+        onPress={() => Alert.alert("Selecione um cultivo!")}
+        containerStyle={{ width: "80%", alignSelf: "center" }}
+      >
+        Continuar
+      </Button>
+    );
+
+  if (cultivarData === undefined)
     return (
       <Button size="lg" disabled containerStyle={{ width: "80%", alignSelf: "center" }}>
         Buscando constantes...
@@ -116,7 +138,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               <ConstantInput control={control} name="HARVEST_INDEX" label={PPL_CONSTANTS_PT_BR["HARVEST_INDEX"]} />
               <ConstantSelector
                 constantType="HARVEST_INDEX"
-                constants={crop.constants.filter((c) => c.type === "HARVEST_INDEX")}
+                constants={cultivarData.constants.filter((c) => c.type === "HARVEST_INDEX")}
                 onChange={(v) => handleConstantValueSelected("HARVEST_INDEX", v)}
               />
             </View>
@@ -129,7 +151,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="AERIAL_RESIDUE_INDEX"
-                constants={crop.constants.filter((c) => c.type === "AERIAL_RESIDUE_INDEX")}
+                constants={cultivarData.constants.filter((c) => c.type === "AERIAL_RESIDUE_INDEX")}
                 onChange={(v) => handleConstantValueSelected("AERIAL_RESIDUE_INDEX", v)}
               />
             </View>
@@ -142,7 +164,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="PRODUCT_RESIDUE_INDEX"
-                constants={crop.constants.filter((c) => c.type === "PRODUCT_RESIDUE_INDEX")}
+                constants={cultivarData.constants.filter((c) => c.type === "PRODUCT_RESIDUE_INDEX")}
                 onChange={(v) => handleConstantValueSelected("PRODUCT_RESIDUE_INDEX", v)}
               />
             </View>
@@ -155,7 +177,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="PRODUCT_DRY_MATTER_FACTOR"
-                constants={crop.constants.filter((c) => c.type === "PRODUCT_DRY_MATTER_FACTOR")}
+                constants={cultivarData.constants.filter((c) => c.type === "PRODUCT_DRY_MATTER_FACTOR")}
                 onChange={(v) => handleConstantValueSelected("PRODUCT_DRY_MATTER_FACTOR", v)}
               />
             </View>
@@ -168,7 +190,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="RESIDUE_DRY_MATTER_FACTOR"
-                constants={crop.constants.filter((c) => c.type === "RESIDUE_DRY_MATTER_FACTOR")}
+                constants={cultivarData.constants.filter((c) => c.type === "RESIDUE_DRY_MATTER_FACTOR")}
                 onChange={(v) => handleConstantValueSelected("RESIDUE_DRY_MATTER_FACTOR", v)}
               />
             </View>
@@ -181,7 +203,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="BELOWGROUND_INDEX"
-                constants={crop.constants.filter((c) => c.type === "BELOWGROUND_INDEX")}
+                constants={cultivarData.constants.filter((c) => c.type === "BELOWGROUND_INDEX")}
                 onChange={(v) => handleConstantValueSelected("BELOWGROUND_INDEX", v)}
               />
             </View>
@@ -194,7 +216,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="WEED_AERIAL_FACTOR"
-                constants={crop.constants.filter((c) => c.type === "WEED_AERIAL_FACTOR")}
+                constants={cultivarData.constants.filter((c) => c.type === "WEED_AERIAL_FACTOR")}
                 onChange={(v) => handleConstantValueSelected("WEED_AERIAL_FACTOR", v)}
               />
             </View>
@@ -207,7 +229,7 @@ export function ConstantsModal({ crop, onSubmit }: Props) {
               />
               <ConstantSelector
                 constantType="WEED_BELOWGROUND_INDEX"
-                constants={crop.constants.filter((c) => c.type === "WEED_BELOWGROUND_INDEX")}
+                constants={cultivarData.constants.filter((c) => c.type === "WEED_BELOWGROUND_INDEX")}
                 onChange={(v) => handleConstantValueSelected("WEED_BELOWGROUND_INDEX", v)}
               />
             </View>

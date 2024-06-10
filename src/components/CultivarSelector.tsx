@@ -1,100 +1,97 @@
-import { CLIMATES_TO_PT_BR } from "@/utils/parseClimatesToPT_BR";
 import { Button, Icon, ListItem, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
-import { getCropsList } from "../services/api";
-import { Climates, Crop } from "../types";
+import { getCropsDetails, getCropsList } from "../services/api";
+import { Crop, Cultivar } from "../types";
 
 interface Props {
-  selectedCrop: Crop | null;
-  onSelect: (crop: Crop) => void;
+  selectedCultivar: Cultivar | null;
+  onSelect: (cultivar: Cultivar | null) => void;
 }
 
-export function CropSelector({ selectedCrop, onSelect }: Props) {
+export function CultivarSelector({ selectedCultivar, onSelect }: Props) {
   const styles = useStyles();
   const { theme } = useTheme();
   const [isOpen, setOpen] = useState(false);
-  const [selectedClimate, setSelectedClimate] = useState<Climates | null>(null);
+  const [selectedCrop, setSelectedCrop] = useState<Crop | null>(null);
+
+  const getCurrentList = () => {
+    if (selectedCultivar === null && selectedCrop === null) return "CROPS";
+    if (selectedCrop === null) return "CROPS";
+
+    return "CULTIVARS";
+  };
 
   const cropsListQuery = useQuery({
     queryKey: ["CROPS"],
     queryFn: getCropsList,
   });
+  const cropDetailsQuery = useQuery({
+    queryKey: ["CROPS", selectedCrop],
+    queryFn: () => getCropsDetails(selectedCrop!.id),
+    enabled: selectedCrop !== null,
+  });
 
   const getButtonLabel = () => {
     if (cropsListQuery.isLoading) return "Buscando...";
 
-    if (selectedCrop) return selectedCrop.name;
+    if (selectedCultivar) return `${selectedCrop?.name} - ${selectedCultivar.name}`;
 
-    return "Seleciona cultura";
+    return "Selecionar cultivar";
   };
 
   function closeModal() {
     setOpen(false);
   }
 
+  function reset() {
+    setSelectedCrop(null);
+    onSelect(null);
+  }
+
   function Header() {
-    if (selectedClimate === null) return <Text h3>Selecione um clima</Text>;
+    if (selectedCrop === null) return <Text h3>Selecione uma cultura</Text>;
 
     return (
       <View>
         <Text
           h3
-          onPress={() => setSelectedClimate(null)}
+          onPress={reset}
           style={{ borderBottomColor: theme.colors.white, borderBottomWidth: StyleSheet.hairlineWidth }}
         >
-          <Icon name="arrow-back-ios" size={20} /> Selecione uma cultura
+          <Icon name="arrow-back-ios" size={20} /> Selecione um cultivar
         </Text>
-        <Text style={{ textAlign: "center", marginTop: 6 }}>
-          Clima: {CLIMATES_TO_PT_BR[selectedClimate].toUpperCase()}
-        </Text>
+        <Text style={{ textAlign: "center", marginTop: 6 }}>Cultura: {selectedCrop.name}</Text>
       </View>
     );
   }
 
-  function ClimatesList() {
-    return Object.keys(cropsListQuery.data!).map((key) => {
-      const items = cropsListQuery.data![key as Climates];
-
-      return (
-        <ListItem
-          key={key}
-          onPress={() => setSelectedClimate(key as Climates)}
-          disabled={items.length === 0}
-          style={{ opacity: items.length > 0 ? 1 : 0.5 }}
-          bottomDivider
-        >
-          <ListItem.Content>
-            <ListItem.Title>{CLIMATES_TO_PT_BR[key as Climates]}</ListItem.Title>
-            <ListItem.Subtitle>{items.length} culturas cadastradas</ListItem.Subtitle>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-      );
-    });
+  function CropsList() {
+    return cropsListQuery.data!.map((crop) => (
+      <ListItem key={crop.id} onPress={() => setSelectedCrop(crop)} bottomDivider>
+        <ListItem.Content>
+          <ListItem.Title>{crop.name}</ListItem.Title>
+          <ListItem.Subtitle>{crop.scientificName}</ListItem.Subtitle>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+    ));
   }
 
-  function CropsList() {
-    if (!selectedClimate) {
-      return null;
-    }
-
-    const items = cropsListQuery.data![selectedClimate];
-
-    return items.map((item) => (
+  function CultivarsList() {
+    return cropDetailsQuery.data?.crop.cultivars.map((cultivar) => (
       <ListItem
-        key={item.id}
+        key={cultivar.id}
         onPress={() => {
           closeModal();
-          onSelect(item);
+          onSelect({ ...cultivar, cropName: selectedCrop?.name });
         }}
         bottomDivider
       >
         <ListItem.Content>
-          <ListItem.Title>{item.name}</ListItem.Title>
-          <ListItem.Subtitle>{item.scientificName}</ListItem.Subtitle>
+          <ListItem.Title>{cultivar.name}</ListItem.Title>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
@@ -117,7 +114,7 @@ export function CropSelector({ selectedCrop, onSelect }: Props) {
           <Header />
 
           <ScrollView style={{ width: "100%", marginVertical: 10 }}>
-            {selectedClimate === null ? <ClimatesList /> : <CropsList />}
+            {getCurrentList() === "CROPS" ? <CropsList /> : <CultivarsList />}
           </ScrollView>
 
           <Button

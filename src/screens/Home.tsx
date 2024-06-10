@@ -1,18 +1,16 @@
 import { ConstantsModal } from "@/components/ConstantsModal/index";
-import { CropSelector } from "@/components/CropSelector";
+import { CultivarSelector } from "@/components/CultivarSelector";
 import { DimissableKeyboardView } from "@/components/DimissableKeyboardView";
 import { NumericInput } from "@/components/NumericInput";
 import { PPL } from "@/models/PPL";
+import { PPL_Constants } from "@/types/CultivarConstants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button } from "@rneui/base";
 import { Text, useTheme } from "@rneui/themed";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { RootStackParamList } from "../Routes";
-import { getCropsDetails } from "../services/api";
-import { Crop, PPL_Constants } from "../types";
+import { Cultivar } from "../types";
 
 interface FormData {
   harvestedProduction: string;
@@ -23,18 +21,12 @@ type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
-  const [selectedCrop, setSelectedCrop] = useState<Crop | null>(null);
+  const [selectedCultivar, setSelectedCultivar] = useState<Cultivar | null>(null);
   const { control, getValues } = useForm<FormData>({
     defaultValues: {
       harvestedProduction: "0",
       area: "0",
     },
-  });
-
-  const cropsConstantsQuery = useQuery({
-    queryKey: ["CROPS", selectedCrop],
-    queryFn: () => getCropsDetails(selectedCrop!.id),
-    enabled: selectedCrop !== null,
   });
 
   function onSubmit(constants: PPL_Constants) {
@@ -46,14 +38,14 @@ export function Home({ navigation }: NavigationProps) {
       return;
     }
 
-    const fullData = { area, harvestedProduction, selectedCrop: selectedCrop, constants };
+    const fullData = { area, harvestedProduction, selectedCrop: selectedCultivar, constants };
     console.log(fullData);
 
     const ppl = new PPL({
       area,
       harvestedProduction,
       constants,
-      crop: selectedCrop!,
+      cultivar: selectedCultivar!,
     });
 
     navigation.navigate("PPLResult", { ppl });
@@ -76,8 +68,8 @@ export function Home({ navigation }: NavigationProps) {
           </Text>
 
           <View style={{ marginHorizontal: 10, gap: 4, paddingBottom: 24 }}>
-            <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Cultura</Text>
-            <CropSelector selectedCrop={selectedCrop} onSelect={(c) => setSelectedCrop(c)} />
+            <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}></Text>
+            <CultivarSelector selectedCultivar={selectedCultivar} onSelect={(c) => setSelectedCultivar(c)} />
           </View>
 
           <Controller
@@ -102,17 +94,7 @@ export function Home({ navigation }: NavigationProps) {
         </View>
 
         <View style={{ gap: theme.spacing.lg }}>
-          {selectedCrop ? (
-            <ConstantsModal crop={cropsConstantsQuery.data?.crop} onSubmit={(constants) => onSubmit(constants)} />
-          ) : (
-            <Button
-              size="lg"
-              onPress={() => Alert.alert("Selecione uma cultura!")}
-              containerStyle={{ width: "80%", alignSelf: "center" }}
-            >
-              Continuar
-            </Button>
-          )}
+          <ConstantsModal selectedCultivar={selectedCultivar} onSubmit={(constants) => onSubmit(constants)} />
         </View>
       </View>
     </DimissableKeyboardView>

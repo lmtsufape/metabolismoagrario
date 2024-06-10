@@ -1,4 +1,4 @@
-import { CropConstant, PPL_Constants } from "@/types/index";
+import { CultivarConstant, PPL_Constants } from "@/types/CultivarConstants";
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import ReactNativeModal from "react-native-modal";
 interface Props {
   constantType: keyof PPL_Constants;
   onChange: (value: string) => void;
-  constants: CropConstant[];
+  constants: CultivarConstant[];
 }
 export function ConstantSelector({ constantType, constants, onChange }: Props) {
   const { theme } = useTheme();
