@@ -4,6 +4,7 @@ import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
+import { ConstantsFilter, Filter, defaultConstantsFilter } from "./Filter";
 
 interface Props {
   constantType: keyof PPL_Constants;
@@ -15,13 +16,27 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
 
+  const [filter, setFilter] = useState<ConstantsFilter>(defaultConstantsFilter);
+
   function closeModal() {
     setOpen(false);
   }
 
+  function getConstantsListFiltered() {
+    return constants.filter((constant) => {
+      let filterFlag = true;
+      if (filter.country) filterFlag = filterFlag && constant.country === filter.country;
+      if (filter.climate) filterFlag = filterFlag && constant.climate === filter.climate;
+      if (filter.biome) filterFlag = filterFlag && constant.biome === filter.biome;
+      if (filter.irrigation) filterFlag = filterFlag && constant.irrigation === filter.irrigation;
+      if (filter.cultivationSystem) filterFlag = filterFlag && constant.cultivationSystem === filter.cultivationSystem;
+      return filterFlag;
+    });
+  }
+
   return (
     <>
-      <Button onPress={() => setOpen(true)} type="clear" icon={{ name: "edit", type: "font-awesome5" }}></Button>
+      <Button onPress={() => setOpen(true)} type="clear" icon={{ name: "edit", type: "material" }} />
       <ReactNativeModal
         isVisible={isOpen}
         style={{ margin: theme.spacing.md }}
@@ -30,11 +45,14 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
         onBackdropPress={closeModal}
       >
         <View style={styles.container}>
-          <Text h4 style={{ textAlign: "center" }}>
+          <Text h4 style={{ textAlign: "center", paddingHorizontal: theme.spacing.lg }}>
             Escolher constante - {PPL_CONSTANTS_PT_BR[constantType]}
           </Text>
-          <ScrollView style={{ width: "100%", marginVertical: theme.spacing.lg }}>
-            {constants.map((constant) => (
+
+          <Filter constants={constants} filter={filter} onChange={setFilter} />
+
+          <ScrollView style={{ width: "100%" }}>
+            {getConstantsListFiltered().map((constant) => (
               <View key={constant.id} style={styles.constantCard}>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Valor:</Text>
@@ -47,6 +65,26 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Comentário:</Text>
                   <Text style={{ fontSize: 16 }}>{constant.comment}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Clima:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.climate}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Bioma:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.biome}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>País:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.country}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Irrigação:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.irrigation}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Sistema de cultivo:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.cultivationSystem}</Text>
                 </View>
 
                 <Button
@@ -62,8 +100,8 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
               </View>
             ))}
 
-            {constants.length === 0 && (
-              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma constante cadastrada...</Text>
+            {getConstantsListFiltered().length === 0 && (
+              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma constante encontrada...</Text>
             )}
           </ScrollView>
 
@@ -82,18 +120,21 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    height: "70%",
+    height: "100%",
+    gap: theme.spacing.lg,
   },
   constantCard: {
-    borderBottomColor: theme.colors.grey3,
-    borderBottomWidth: 1,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: theme.colors.grey0,
     width: "100%",
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
+    borderRadius: 10,
   },
   infoContainer: {
     flexDirection: "row",
-    gap: theme.spacing.sm,
-    marginVertical: theme.spacing.xs,
+    marginVertical: theme.spacing.md,
+    gap: theme.spacing.md,
   },
   closeBtn: {
     marginTop: "auto",

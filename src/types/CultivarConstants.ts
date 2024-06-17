@@ -20,6 +20,15 @@ export enum Climates {
   MountainCold = "MountainCold", // Frio da montanha
   Polar = "Polar", // Polar
 }
+export enum IrrigationTypes {
+  Irrigation = "Irrigation",
+  Dry = "Dry"
+}
+export enum CultivationSystem {
+  Conventional = "Conventional",
+  Organic = "Organic",
+  Agroecological = "Agroecological",
+}
 
 export type CultivarConstant = {
   id: string
@@ -27,8 +36,12 @@ export type CultivarConstant = {
   reference: string
   comment: string
   type: keyof PPL_Constants
-  // createdAt: string
-  // updatedAt: string
+  cultivarId: string
+  climate: Climates,
+  biome: string,
+  irrigation: IrrigationTypes,
+  country: string,
+  cultivationSystem: CultivationSystem,
 }
 
 

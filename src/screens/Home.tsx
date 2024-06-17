@@ -68,7 +68,7 @@ export function Home({ navigation }: NavigationProps) {
           </Text>
 
           <View style={{ marginHorizontal: 10, gap: 4, paddingBottom: 24 }}>
-            <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}></Text>
+            <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Cultivar</Text>
             <CultivarSelector selectedCultivar={selectedCultivar} onSelect={(c) => setSelectedCultivar(c)} />
           </View>
 

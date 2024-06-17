@@ -32,6 +32,7 @@ export function CultivarSelector({ selectedCultivar, onSelect }: Props) {
     queryKey: ["CROPS", selectedCrop],
     queryFn: () => getCropsDetails(selectedCrop!.id),
     enabled: selectedCrop !== null,
+    staleTime: 0, //
   });
 
   const getButtonLabel = () => {
@@ -81,6 +82,8 @@ export function CultivarSelector({ selectedCultivar, onSelect }: Props) {
   }
 
   function CultivarsList() {
+    if (cropDetailsQuery.isLoading) return <Text>Buscando cultivares...</Text>;
+
     return cropDetailsQuery.data?.crop.cultivars.map((cultivar) => (
       <ListItem
         key={cultivar.id}
