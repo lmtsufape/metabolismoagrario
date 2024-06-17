@@ -4,6 +4,9 @@ import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { Select } from "../Select";
 import { CultivarConstant } from "@/types/CultivarConstants";
+import { IRRIGATIONS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR";
+import { CULTIVATION_SYSTEMS_TO_PT_BR } from "@/utils/parseCultivationSystemsToPT_BR";
+import { CLIMATES_TO_PT_BR } from "@/utils/parseClimatesToPT_BR";
 
 export interface ConstantsFilter {
   country: string | null;
@@ -36,20 +39,26 @@ export function Filter({ constants, filter, onChange }: Props) {
     [constants]
   );
   const climatesList = new Map(
-    constants.map((constant) => [constant.climate, { label: constant.climate, id: constant.climate }])
-  ); // TODO parse the label to PT-BR
+    constants.map((constant) => [
+      constant.climate,
+      { label: CLIMATES_TO_PT_BR[constant.climate], id: constant.climate },
+    ])
+  );
   const biomesList = new Map(
     constants.map((constant) => [constant.biome, { label: constant.biome, id: constant.biome }])
   );
   const irrigationList = new Map(
-    constants.map((constant) => [constant.irrigation, { label: constant.irrigation, id: constant.irrigation }])
-  ); // TODO parse the label to PT-BR
+    constants.map((constant) => [
+      constant.irrigation,
+      { label: IRRIGATIONS_TO_PT_BR[constant.irrigation], id: constant.irrigation },
+    ])
+  );
   const cultivationSystemsList = new Map(
     constants.map((constant) => [
       constant.cultivationSystem,
-      { label: constant.cultivationSystem, id: constant.cultivationSystem },
+      { label: CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem], id: constant.cultivationSystem },
     ])
-  ); // TODO parse the label to PT-BR
+  );
 
   function closeModal() {
     setOpen(false);

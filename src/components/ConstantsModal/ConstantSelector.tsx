@@ -5,6 +5,9 @@ import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { ConstantsFilter, Filter, defaultConstantsFilter } from "./Filter";
+import { CLIMATES_TO_PT_BR } from "@/utils/parseClimatesToPT_BR";
+import { IRRIGATIONS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR";
+import { CULTIVATION_SYSTEMS_TO_PT_BR } from "@/utils/parseCultivationSystemsToPT_BR";
 
 interface Props {
   constantType: keyof PPL_Constants;
@@ -68,7 +71,7 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Clima:</Text>
-                  <Text style={{ fontSize: 16 }}>{constant.climate}</Text>
+                  <Text style={{ fontSize: 16 }}>{CLIMATES_TO_PT_BR[constant.climate]}</Text>
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Bioma:</Text>
@@ -80,11 +83,11 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Irrigação:</Text>
-                  <Text style={{ fontSize: 16 }}>{constant.irrigation}</Text>
+                  <Text style={{ fontSize: 16 }}>{IRRIGATIONS_TO_PT_BR[constant.irrigation]}</Text>
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Sistema de cultivo:</Text>
-                  <Text style={{ fontSize: 16 }}>{constant.cultivationSystem}</Text>
+                  <Text style={{ fontSize: 16 }}>{CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem]}</Text>
                 </View>
 
                 <Button
