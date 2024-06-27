@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import 'expo-dev-client';
 import { ThemeProvider, createTheme } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
