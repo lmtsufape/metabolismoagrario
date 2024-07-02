@@ -8,6 +8,7 @@ import { ConstantsFilter, Filter, defaultConstantsFilter } from "./Filter";
 import { CLIMATES_TO_PT_BR } from "@/utils/parseClimatesToPT_BR";
 import { IRRIGATIONS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR";
 import { CULTIVATION_SYSTEMS_TO_PT_BR } from "@/utils/parseCultivationSystemsToPT_BR";
+import { SOILS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR copy";
 
 interface Props {
   constantType: keyof PPL_Constants;
@@ -26,13 +27,41 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
   }
 
   function getConstantsListFiltered() {
+    function checkFilterMatchesConstant({
+      constantValue,
+      filterKey,
+    }: {
+      constantValue: any;
+      filterKey: keyof ConstantsFilter;
+    }) {
+      if (constantValue === filter[filterKey]) {
+        return true;
+      }
+      if (filter[filterKey] === "not_informed") {
+        return constantValue === null;
+      }
+      return false;
+    }
+
     return constants.filter((constant) => {
       let filterFlag = true;
-      if (filter.country) filterFlag = filterFlag && constant.country === filter.country;
-      if (filter.climate) filterFlag = filterFlag && constant.climate === filter.climate;
-      if (filter.biome) filterFlag = filterFlag && constant.biome === filter.biome;
-      if (filter.irrigation) filterFlag = filterFlag && constant.irrigation === filter.irrigation;
-      if (filter.cultivationSystem) filterFlag = filterFlag && constant.cultivationSystem === filter.cultivationSystem;
+      if (filter.country)
+        filterFlag =
+          filterFlag && checkFilterMatchesConstant({ constantValue: constant.country, filterKey: "country" });
+      if (filter.climate)
+        filterFlag =
+          filterFlag && checkFilterMatchesConstant({ constantValue: constant.climate, filterKey: "climate" });
+      if (filter.biome)
+        filterFlag = filterFlag && checkFilterMatchesConstant({ constantValue: constant.biome, filterKey: "biome" });
+      if (filter.irrigation)
+        filterFlag =
+          filterFlag && checkFilterMatchesConstant({ constantValue: constant.irrigation, filterKey: "irrigation" });
+      if (filter.soil)
+        filterFlag = filterFlag && checkFilterMatchesConstant({ constantValue: constant.soil, filterKey: "soil" });
+      if (filter.cultivationSystem)
+        filterFlag =
+          filterFlag &&
+          checkFilterMatchesConstant({ constantValue: constant.cultivationSystem, filterKey: "cultivationSystem" });
       return filterFlag;
     });
   }
@@ -49,7 +78,7 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
       >
         <View style={styles.container}>
           <Text h4 style={{ textAlign: "center", paddingHorizontal: theme.spacing.lg }}>
-            Escolher constante - {PPL_CONSTANTS_PT_BR[constantType]}
+            Escolher fator de conversão - {PPL_CONSTANTS_PT_BR[constantType]}
           </Text>
 
           <Filter constants={constants} filter={filter} onChange={setFilter} />
@@ -60,14 +89,6 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Valor:</Text>
                   <Text style={{ fontWeight: "bold", fontSize: 16 }}>{constant.value}</Text>
-                </View>
-                <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Referência:</Text>
-                  <Text style={{ fontSize: 16 }}>{constant.reference}</Text>
-                </View>
-                <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Comentário:</Text>
-                  <Text style={{ fontSize: 16 }}>{constant.comment}</Text>
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Clima:</Text>
@@ -82,12 +103,24 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                   <Text style={{ fontSize: 16 }}>{constant.country}</Text>
                 </View>
                 <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Solo:</Text>
+                  <Text style={{ fontSize: 16 }}>{SOILS_TO_PT_BR[constant.soil]}</Text>
+                </View>
+                <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Irrigação:</Text>
                   <Text style={{ fontSize: 16 }}>{IRRIGATIONS_TO_PT_BR[constant.irrigation]}</Text>
                 </View>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Sistema de cultivo:</Text>
                   <Text style={{ fontSize: 16 }}>{CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem]}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Referência:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.reference}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Observação:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.comment}</Text>
                 </View>
 
                 <Button
@@ -98,13 +131,13 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                   }}
                   type="clear"
                 >
-                  Selecionar constante
+                  Selecionar fator de conversão
                 </Button>
               </View>
             ))}
 
             {getConstantsListFiltered().length === 0 && (
-              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma constante encontrada...</Text>
+              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma fator de conversão encontrada...</Text>
             )}
           </ScrollView>
 

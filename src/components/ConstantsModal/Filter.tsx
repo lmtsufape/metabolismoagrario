@@ -7,13 +7,15 @@ import { CultivarConstant } from "@/types/CultivarConstants";
 import { IRRIGATIONS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR";
 import { CULTIVATION_SYSTEMS_TO_PT_BR } from "@/utils/parseCultivationSystemsToPT_BR";
 import { CLIMATES_TO_PT_BR } from "@/utils/parseClimatesToPT_BR";
+import { SOILS_TO_PT_BR } from "@/utils/parseIrrigationsToPT_BR copy";
 
 export interface ConstantsFilter {
-  country: string | null;
-  climate: string | null;
-  biome: string | null;
-  irrigation: string | null;
-  cultivationSystem: string | null;
+  country: string | null | "not_informed";
+  climate: string | null | "not_informed";
+  biome: string | null | "not_informed";
+  irrigation: string | null | "not_informed";
+  cultivationSystem: string | null | "not_informed";
+  soil: string | null | "not_informed";
 }
 export const defaultConstantsFilter: ConstantsFilter = {
   country: null,
@@ -21,6 +23,7 @@ export const defaultConstantsFilter: ConstantsFilter = {
   biome: null,
   irrigation: null,
   cultivationSystem: null,
+  soil: null,
 };
 
 interface Props {
@@ -34,31 +37,63 @@ export function Filter({ constants, filter, onChange }: Props) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
 
-  const countriesList = useMemo(
-    () => new Map(constants.map((constant) => [constant.country, { label: constant.country, id: constant.country }])),
-    [constants]
+  const countriesList = new Map(
+    constants.map((constant) => [
+      constant.country,
+      { label: constant.country ?? "Não informado", id: constant.country ?? "not_informed" },
+    ])
   );
   const climatesList = new Map(
     constants.map((constant) => [
       constant.climate,
-      { label: CLIMATES_TO_PT_BR[constant.climate], id: constant.climate },
+      { label: CLIMATES_TO_PT_BR[constant.climate] ?? "Não informado", id: constant.climate ?? "not_informed" },
     ])
   );
   const biomesList = new Map(
-    constants.map((constant) => [constant.biome, { label: constant.biome, id: constant.biome }])
+    constants.map((constant) => [
+      constant.biome,
+      { label: constant.biome ?? "Não informado", id: constant.biome ?? "not_informed" },
+    ])
+  );
+  const soilList = new Map(
+    constants.map((constant) => [
+      constant.soil,
+      {
+        label: SOILS_TO_PT_BR[constant.soil] ?? "Não informado",
+        id: constant.soil ?? "not_informed",
+      },
+    ])
   );
   const irrigationList = new Map(
     constants.map((constant) => [
       constant.irrigation,
-      { label: IRRIGATIONS_TO_PT_BR[constant.irrigation], id: constant.irrigation },
+      {
+        label: IRRIGATIONS_TO_PT_BR[constant.irrigation] ?? "Não informado",
+        id: constant.irrigation ?? "not_informed",
+      },
     ])
   );
   const cultivationSystemsList = new Map(
     constants.map((constant) => [
       constant.cultivationSystem,
-      { label: CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem], id: constant.cultivationSystem },
+      {
+        label: CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem] ?? "Não informado",
+        id: constant.cultivationSystem ?? "not_informed",
+      },
     ])
   );
+
+  function sortConstantsByLabel(list: Map<string, { label: string; id: string }>) {
+    return Array.from(list.values()).sort((a, b) => {
+      if (a.id === "not_informed") {
+        return -1;
+      }
+      if (b.id === "not_informed") {
+        return 1;
+      }
+      return a.label.localeCompare(b.label);
+    });
+  }
 
   function closeModal() {
     setOpen(false);
@@ -113,17 +148,9 @@ export function Filter({ constants, filter, onChange }: Props) {
 
           <ScrollView style={styles.filtersContainer}>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>País</Text>
-              <Select
-                list={[...countriesList.values()]}
-                selectedItem={filter.country}
-                onSelect={(selectedItem) => onChange({ ...filter, country: selectedItem || null })}
-              />
-            </View>
-            <View style={styles.filterContainer}>
               <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Clima</Text>
               <Select
-                list={[...climatesList.values()]}
+                list={sortConstantsByLabel(climatesList)}
                 selectedItem={filter.climate}
                 onSelect={(selectedItem) => onChange({ ...filter, climate: selectedItem || null })}
               />
@@ -131,15 +158,31 @@ export function Filter({ constants, filter, onChange }: Props) {
             <View style={styles.filterContainer}>
               <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Bioma</Text>
               <Select
-                list={[...biomesList.values()]}
+                list={sortConstantsByLabel(biomesList)}
                 selectedItem={filter.biome}
                 onSelect={(selectedItem) => onChange({ ...filter, biome: selectedItem || null })}
               />
             </View>
             <View style={styles.filterContainer}>
+              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>País</Text>
+              <Select
+                list={sortConstantsByLabel(countriesList)}
+                selectedItem={filter.country}
+                onSelect={(selectedItem) => onChange({ ...filter, country: selectedItem || null })}
+              />
+            </View>
+            <View style={styles.filterContainer}>
+              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Solo</Text>
+              <Select
+                list={sortConstantsByLabel(soilList)}
+                selectedItem={filter.soil}
+                onSelect={(selectedItem) => onChange({ ...filter, soil: selectedItem || null })}
+              />
+            </View>
+            <View style={styles.filterContainer}>
               <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Irrigação</Text>
               <Select
-                list={[...irrigationList.values()]}
+                list={sortConstantsByLabel(irrigationList)}
                 selectedItem={filter.irrigation}
                 onSelect={(selectedItem) => onChange({ ...filter, irrigation: selectedItem || null })}
               />
@@ -147,7 +190,7 @@ export function Filter({ constants, filter, onChange }: Props) {
             <View style={styles.filterContainer}>
               <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Sistema de cultivo</Text>
               <Select
-                list={[...cultivationSystemsList.values()]}
+                list={sortConstantsByLabel(cultivationSystemsList)}
                 selectedItem={filter.cultivationSystem}
                 onSelect={(selectedItem) => onChange({ ...filter, cultivationSystem: selectedItem || null })}
               />

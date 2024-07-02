@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import 'expo-dev-client';
+import "expo-dev-client";
 import { ThemeProvider, createTheme } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
@@ -9,7 +9,10 @@ import { useAppState } from "@/hooks/useAppState";
 import { AppStateStatus, Platform } from "react-native";
 import { useOnlineManager } from "@/hooks/useOnlineManager";
 
-const theme = createTheme();
+const theme = createTheme({
+  mode: "dark",
+  lightColors: createTheme().darkColors,
+});
 
 const queryClient = new QueryClient();
 

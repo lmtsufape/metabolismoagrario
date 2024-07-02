@@ -3,7 +3,7 @@ import { Cultivar } from "@/types/index";
 import { convertFieldsToNumber } from "@/utils/convertObjFieldsToNumber";
 import { PPL_CONSTANTS_PT_BR } from "@/utils/pplConstantsToPT_BR";
 import { Text } from "@rneui/base";
-import { Button, Icon } from "@rneui/themed";
+import { Button, Icon, useTheme } from "@rneui/themed";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ type Props = {
 export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
   const styles = useStyles();
   const [isOpen, setOpen] = useState(false);
+  const { theme } = useTheme();
 
   const cultivarDetailsQuery = useQuery({
     queryKey: ["CULTIVAR", selectedCultivar?.id],
@@ -111,7 +112,7 @@ export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
   if (cultivarData === undefined)
     return (
       <Button size="lg" disabled containerStyle={{ width: "80%", alignSelf: "center" }}>
-        Buscando constantes...
+        Buscando fatores de conversão...
       </Button>
     );
 
@@ -131,7 +132,9 @@ export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
       >
         <View style={styles.container}>
           <Icon name="chevron-down" type="font-awesome-5" />
-          <Text h3>Definir Constantes</Text>
+          <Text h3 style={{ paddingHorizontal: theme.spacing.lg, textAlign: "center" }}>
+            Definir Fatores de conversão
+          </Text>
 
           <ScrollView style={styles.formContainer} contentContainerStyle={{ alignItems: "center" }}>
             <View style={styles.constantContainer}>

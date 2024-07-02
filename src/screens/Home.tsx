@@ -53,7 +53,14 @@ export function Home({ navigation }: NavigationProps) {
 
   return (
     <DimissableKeyboardView>
-      <View style={{ flex: 1, padding: theme.spacing.lg, justifyContent: "space-between" }}>
+      <View
+        style={{
+          flex: 1,
+          padding: theme.spacing.lg,
+          justifyContent: "space-between",
+          backgroundColor: theme?.colors?.background,
+        }}
+      >
         <View style={{ gap: theme.spacing.lg }}>
           <Text
             h1

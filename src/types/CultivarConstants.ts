@@ -29,6 +29,11 @@ export enum CultivationSystem {
   Organic = "Organic",
   Agroecological = "Agroecological",
 }
+export enum SoilTypes {
+  Clayey = "Clayey",
+  Sandy = "Sandy",
+  SandyClay = "SandyClay",
+}
 
 export type CultivarConstant = {
   id: string
@@ -40,6 +45,7 @@ export type CultivarConstant = {
   climate: Climates,
   biome: string,
   irrigation: IrrigationTypes,
+  soil: SoilTypes,
   country: string,
   cultivationSystem: CultivationSystem,
 }
