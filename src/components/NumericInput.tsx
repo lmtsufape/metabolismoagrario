@@ -30,12 +30,5 @@ export function NumericInput({ onChange, ...props }: Props) {
     return newText;
   }
 
-  return (
-    <Input
-      label="Produção colhida (t de massa fresca)"
-      {...props}
-      keyboardType="numeric"
-      onChangeText={(t) => onChange(parseChangedText(t))}
-    />
-  );
+  return <Input {...props} keyboardType="numeric" onChangeText={(t) => onChange(parseChangedText(t))} />;
 }

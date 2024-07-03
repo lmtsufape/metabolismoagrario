@@ -137,7 +137,7 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
             ))}
 
             {getConstantsListFiltered().length === 0 && (
-              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma fator de conversão encontrada...</Text>
+              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma fator de conversão encontrado...</Text>
             )}
           </ScrollView>
 

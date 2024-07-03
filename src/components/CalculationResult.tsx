@@ -10,12 +10,12 @@ export function CalculationResult({ calcResult }: Props) {
   const { theme } = useTheme();
   const styles = useStyles();
 
-  function parseResult(result: number) {
-    if (isNaN(result)) return "--";
+  function parseResult(result: number, unity: string) {
+    if (isNaN(result)) return "Não foi possível calcular";
 
-    if (!isFinite(result)) return "∞";
+    if (!isFinite(result)) return "Não foi possível calcular";
 
-    return result.toFixed(2);
+    return result.toFixed(2) + " " + unity;
   }
 
   return (
@@ -31,10 +31,7 @@ export function CalculationResult({ calcResult }: Props) {
     >
       <Text style={{ fontSize: 18, fontWeight: "normal", textAlign: "center", ...styles.text }}>
         {calcResult.name}:{" "}
-        <Text style={{ fontWeight: "bold", ...styles.text }}>
-          {parseResult(calcResult.result)}
-          {" " + calcResult.unity}
-        </Text>
+        <Text style={{ fontWeight: "bold", ...styles.text }}>{parseResult(calcResult.result, calcResult.unity)}</Text>
       </Text>
 
       <Text style={{ fontStyle: "italic", ...styles.text }}>

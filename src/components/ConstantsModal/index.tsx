@@ -41,7 +41,7 @@ export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
     if (constant) {
       return constant.value.toString();
     }
-    return "0";
+    return "";
   }
 
   const { control, handleSubmit, setValue, reset } = useForm<PPL_Constants_Form>({
@@ -77,8 +77,6 @@ export function ConstantsModal({ selectedCultivar, onSubmit }: Props) {
   }
 
   function handleSubmitForm(data: PPL_Constants_Form) {
-    // TODO validate data
-
     closeModal();
     onSubmit(convertFieldsToNumber(data));
   }
@@ -264,8 +262,13 @@ function ConstantInput({ control, name, label }: ConstantInputProps) {
         required: true,
       }}
       name={name}
-      render={({ field: { ref, ...rest } }) => (
-        <NumericInput label={label} containerStyle={{ width: "80%" }} {...rest} />
+      render={({ field: { ref, ...rest }, fieldState }) => (
+        <NumericInput
+          label={label}
+          containerStyle={{ width: "80%" }}
+          errorMessage={fieldState.invalid ? "Campo obrigatório" : undefined}
+          {...rest}
+        />
       )}
     />
   );
