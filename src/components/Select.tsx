@@ -27,14 +27,25 @@ export function Select({ list, selectedItem, onSelect }: Props) {
       renderButton={(item, isOpened) => {
         return (
           <View style={styles.dropdownButton}>
-            <Text style={styles.dropdownButtonTxt}>{(item && item.label) || "Selecionar"}</Text>
-            <Icon name={isOpened ? "keyboard-arrow-up" : "keyboard-arrow-down"} type="material" />
+            <Text style={styles.dropdownButtonTxt}>
+              {(item && item.label) || "Selecionar"}
+            </Text>
+            <Icon
+              name={isOpened ? "chevron-up" : "chevron-down"}
+              type="font-awesome"
+              size={12}
+            />
           </View>
         );
       }}
       renderItem={(item: DataShape, index, isSelected) => {
         return (
-          <View style={{ ...styles.dropdownItem, ...(isSelected && { backgroundColor: theme.colors.grey0 }) }}>
+          <View
+            style={{
+              ...styles.dropdownItem,
+              ...(isSelected && { backgroundColor: theme.colors.grey0 }),
+            }}
+          >
             <Text style={{ fontSize: 16 }}>{item.label}</Text>
           </View>
         );
@@ -50,7 +61,9 @@ const useStyles = makeStyles((theme) => ({
   dropdownButton: {
     width: "100%",
     height: 50,
-    backgroundColor: theme.colors.searchBg,
+    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    borderColor: theme.colors.divider,
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "space-between",
