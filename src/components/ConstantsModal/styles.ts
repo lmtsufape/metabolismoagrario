@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     height: "90%",
+    paddingTop: theme.spacing.lg,
   },
   formContainer: {
     width: "100%",
@@ -16,5 +17,10 @@ export const useStyles = makeStyles((theme) => ({
   constantContainer: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  submitButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 6,
+    padding: 18,
   },
 }));

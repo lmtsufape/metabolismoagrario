@@ -4,14 +4,20 @@ import { ThemeProvider, createTheme } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { Routes } from "./src/Routes";
-import { QueryClient, QueryClientProvider, focusManager } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  focusManager,
+} from "@tanstack/react-query";
 import { useAppState } from "@/hooks/useAppState";
 import { AppStateStatus, Platform } from "react-native";
 import { useOnlineManager } from "@/hooks/useOnlineManager";
+import { lightColors } from "./src/styles/theme";
+import { StatusBar } from "expo-status-bar";
 
 const theme = createTheme({
-  mode: "dark",
-  lightColors: createTheme().darkColors,
+  mode: "light",
+  lightColors: lightColors,
 });
 
 const queryClient = new QueryClient();
@@ -31,6 +37,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <ThemeProvider theme={theme}>
+          <StatusBar style="dark" />
           <SafeAreaView style={{ flex: 1 }}>
             <Routes />
           </SafeAreaView>

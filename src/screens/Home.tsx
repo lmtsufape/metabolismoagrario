@@ -21,7 +21,9 @@ type NavigationProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export function Home({ navigation }: NavigationProps) {
   const { theme } = useTheme();
-  const [selectedCultivar, setSelectedCultivar] = useState<Cultivar | null>(null);
+  const [selectedCultivar, setSelectedCultivar] = useState<Cultivar | null>(
+    null
+  );
   const { control, getValues } = useForm<FormData>({
     defaultValues: {
       harvestedProduction: "0",
@@ -38,7 +40,12 @@ export function Home({ navigation }: NavigationProps) {
       return;
     }
 
-    const fullData = { area, harvestedProduction, selectedCrop: selectedCultivar, constants };
+    const fullData = {
+      area,
+      harvestedProduction,
+      selectedCrop: selectedCultivar,
+      constants,
+    };
     console.log(fullData);
 
     const ppl = new PPL({
@@ -61,22 +68,31 @@ export function Home({ navigation }: NavigationProps) {
           backgroundColor: theme?.colors?.background,
         }}
       >
-        <View style={{ gap: theme.spacing.lg }}>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: theme.spacing.lg,
+            flex: 1,
+          }}
+        >
           <Text
             h1
             style={{
               textAlign: "center",
               color: theme.colors.primary,
-              textDecorationLine: "underline",
               marginBottom: theme.spacing.lg,
+              fontWeight: "bold",
             }}
           >
             PPL - Calculadora
           </Text>
 
           <View style={{ marginHorizontal: 10, gap: 4, paddingBottom: 24 }}>
-            <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Cultivar</Text>
-            <CultivarSelector selectedCultivar={selectedCultivar} onSelect={(c) => setSelectedCultivar(c)} />
+            <CultivarSelector
+              selectedCultivar={selectedCultivar}
+              onSelect={(c) => setSelectedCultivar(c)}
+            />
           </View>
 
           <Controller
@@ -86,7 +102,11 @@ export function Home({ navigation }: NavigationProps) {
             }}
             name="harvestedProduction"
             render={({ field: { ref, ...rest } }) => (
-              <NumericInput label="Produção colhida (t de massa fresca)" {...rest} />
+              <NumericInput
+                label="Produção colhida (t de massa fresca)"
+                labelStyle={{ color: theme.colors.grey1, marginBottom: 8 }}
+                {...rest}
+              />
             )}
           />
 
@@ -96,12 +116,21 @@ export function Home({ navigation }: NavigationProps) {
               required: true,
             }}
             name="area"
-            render={({ field: { ref, ...rest } }) => <NumericInput label="Área plantada (ha)" {...rest} />}
+            render={({ field: { ref, ...rest } }) => (
+              <NumericInput
+                label="Área plantada (ha)"
+                labelStyle={{ color: theme.colors.grey1, marginBottom: 8 }}
+                {...rest}
+              />
+            )}
           />
         </View>
 
-        <View style={{ gap: theme.spacing.lg }}>
-          <ConstantsModal selectedCultivar={selectedCultivar} onSubmit={(constants) => onSubmit(constants)} />
+        <View style={{ gap: theme.spacing.lg, marginBottom: theme.spacing.xl }}>
+          <ConstantsModal
+            selectedCultivar={selectedCultivar}
+            onSubmit={(constants) => onSubmit(constants)}
+          />
         </View>
       </View>
     </DimissableKeyboardView>

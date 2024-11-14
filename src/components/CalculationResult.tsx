@@ -29,16 +29,26 @@ export function CalculationResult({ calcResult }: Props) {
         borderRadius: 10,
       }}
     >
-      <Text style={{ fontSize: 18, fontWeight: "normal", textAlign: "center", ...styles.text }}>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "normal",
+          textAlign: "center",
+          ...styles.text,
+        }}
+      >
         {calcResult.name}:{" "}
-        <Text style={{ fontWeight: "bold", ...styles.text }}>{parseResult(calcResult.result, calcResult.unity)}</Text>
+        <Text style={{ fontWeight: "bold", ...styles.text }}>
+          {parseResult(calcResult.result, calcResult.unity)}
+        </Text>
       </Text>
 
       <Text style={{ fontStyle: "italic", ...styles.text }}>
         Fórmula: <Text style={{ ...styles.text }}>{calcResult.formula}</Text>
       </Text>
       <Text style={{ fontStyle: "italic", ...styles.text }}>
-        Cálculo: <Text style={{ ...styles.text }}>{calcResult.calculation}</Text>
+        Cálculo:{" "}
+        <Text style={{ ...styles.text }}>{calcResult.calculation}</Text>
       </Text>
     </View>
   );

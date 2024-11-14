@@ -40,19 +40,28 @@ export function Filter({ constants, filter, onChange }: Props) {
   const countriesList = new Map(
     constants.map((constant) => [
       constant.country,
-      { label: constant.country ?? "Não informado", id: constant.country ?? "not_informed" },
+      {
+        label: constant.country ?? "Não informado",
+        id: constant.country ?? "not_informed",
+      },
     ])
   );
   const climatesList = new Map(
     constants.map((constant) => [
       constant.climate,
-      { label: CLIMATES_TO_PT_BR[constant.climate] ?? "Não informado", id: constant.climate ?? "not_informed" },
+      {
+        label: CLIMATES_TO_PT_BR[constant.climate] ?? "Não informado",
+        id: constant.climate ?? "not_informed",
+      },
     ])
   );
   const biomesList = new Map(
     constants.map((constant) => [
       constant.biome,
-      { label: constant.biome ?? "Não informado", id: constant.biome ?? "not_informed" },
+      {
+        label: constant.biome ?? "Não informado",
+        id: constant.biome ?? "not_informed",
+      },
     ])
   );
   const soilList = new Map(
@@ -77,13 +86,17 @@ export function Filter({ constants, filter, onChange }: Props) {
     constants.map((constant) => [
       constant.cultivationSystem,
       {
-        label: CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem] ?? "Não informado",
+        label:
+          CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem] ??
+          "Não informado",
         id: constant.cultivationSystem ?? "not_informed",
       },
     ])
   );
 
-  function sortConstantsByLabel(list: Map<string, { label: string; id: string }>) {
+  function sortConstantsByLabel(
+    list: Map<string, { label: string; id: string }>
+  ) {
     return Array.from(list.values()).sort((a, b) => {
       if (a.id === "not_informed") {
         return -1;
@@ -101,10 +114,20 @@ export function Filter({ constants, filter, onChange }: Props) {
 
   return (
     <>
-      <View style={{ justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
+      <View
+        style={{
+          justifyContent: "space-between",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
         <Button
-          icon={{ name: "filter-alt", type: "material", color: theme.colors.primary }}
-          titleStyle={{ color: theme.colors.primary }}
+          icon={{
+            name: "filter",
+            type: "font-awesome",
+            color: theme.colors.primary,
+          }}
+          titleStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
           type="clear"
           onPress={() => setOpen(true)}
         >
@@ -114,25 +137,26 @@ export function Filter({ constants, filter, onChange }: Props) {
               containerStyle={{ marginLeft: 4, paddingBottom: 20 }}
               status="primary"
               textStyle={{ color: "#FFf" }}
-              value={Object.values(filter).filter((value) => value !== null).length}
+              value={
+                Object.values(filter).filter((value) => value !== null).length
+              }
             />
           )}
         </Button>
         {Object.values(filter).some((value) => value !== null) && (
           <Button
-            icon={{ name: "filter-alt-off", type: "material", color: theme.colors.error }}
-            titleStyle={{ color: theme.colors.error }}
+            titleStyle={{ color: theme.colors.error, fontWeight: "bold" }}
             type="clear"
             onPress={() => onChange(defaultConstantsFilter)}
           >
-            Limpar
+            Limpar filtros
           </Button>
         )}
       </View>
 
       <ReactNativeModal
         isVisible={isOpen}
-        style={{ margin: 0, justifyContent: "flex-end" }}
+        style={{ margin: 0 }}
         onDismiss={closeModal}
         onBackButtonPress={closeModal}
         onBackdropPress={closeModal}
@@ -140,59 +164,134 @@ export function Filter({ constants, filter, onChange }: Props) {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Icon name="filter-alt" type="material" style={{ marginRight: 5 }} />
-              <Text style={{ fontSize: 18 }}>Filtrar</Text>
+              <Icon
+                name="filter"
+                type="font-awesome"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>Filtrar</Text>
             </View>
-            <Button icon={{ name: "close", type: "material" }} onPress={closeModal} color={"error"} type="clear" />
+            <Button
+              icon={{
+                name: "times",
+                type: "font-awesome",
+                color: theme.colors.error,
+              }}
+              onPress={closeModal}
+              type="clear"
+            />
           </View>
 
           <ScrollView style={styles.filtersContainer}>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Clima</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                Clima
+              </Text>
               <Select
                 list={sortConstantsByLabel(climatesList)}
                 selectedItem={filter.climate}
-                onSelect={(selectedItem) => onChange({ ...filter, climate: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({ ...filter, climate: selectedItem || null })
+                }
               />
             </View>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Bioma</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                Bioma
+              </Text>
               <Select
                 list={sortConstantsByLabel(biomesList)}
                 selectedItem={filter.biome}
-                onSelect={(selectedItem) => onChange({ ...filter, biome: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({ ...filter, biome: selectedItem || null })
+                }
               />
             </View>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>País</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                País
+              </Text>
               <Select
                 list={sortConstantsByLabel(countriesList)}
                 selectedItem={filter.country}
-                onSelect={(selectedItem) => onChange({ ...filter, country: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({ ...filter, country: selectedItem || null })
+                }
               />
             </View>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Solo</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                Solo
+              </Text>
               <Select
                 list={sortConstantsByLabel(soilList)}
                 selectedItem={filter.soil}
-                onSelect={(selectedItem) => onChange({ ...filter, soil: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({ ...filter, soil: selectedItem || null })
+                }
               />
             </View>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Irrigação</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                Irrigação
+              </Text>
               <Select
                 list={sortConstantsByLabel(irrigationList)}
                 selectedItem={filter.irrigation}
-                onSelect={(selectedItem) => onChange({ ...filter, irrigation: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({ ...filter, irrigation: selectedItem || null })
+                }
               />
             </View>
             <View style={styles.filterContainer}>
-              <Text style={{ fontSize: 16, color: theme?.colors?.grey3, fontWeight: "bold" }}>Sistema de cultivo</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme?.colors?.grey3,
+                  fontWeight: "bold",
+                }}
+              >
+                Sistema de cultivo
+              </Text>
               <Select
                 list={sortConstantsByLabel(cultivationSystemsList)}
                 selectedItem={filter.cultivationSystem}
-                onSelect={(selectedItem) => onChange({ ...filter, cultivationSystem: selectedItem || null })}
+                onSelect={(selectedItem) =>
+                  onChange({
+                    ...filter,
+                    cultivationSystem: selectedItem || null,
+                  })
+                }
               />
             </View>
           </ScrollView>

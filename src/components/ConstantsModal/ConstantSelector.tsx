@@ -47,28 +47,61 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
       let filterFlag = true;
       if (filter.country)
         filterFlag =
-          filterFlag && checkFilterMatchesConstant({ constantValue: constant.country, filterKey: "country" });
+          filterFlag &&
+          checkFilterMatchesConstant({
+            constantValue: constant.country,
+            filterKey: "country",
+          });
       if (filter.climate)
         filterFlag =
-          filterFlag && checkFilterMatchesConstant({ constantValue: constant.climate, filterKey: "climate" });
+          filterFlag &&
+          checkFilterMatchesConstant({
+            constantValue: constant.climate,
+            filterKey: "climate",
+          });
       if (filter.biome)
-        filterFlag = filterFlag && checkFilterMatchesConstant({ constantValue: constant.biome, filterKey: "biome" });
+        filterFlag =
+          filterFlag &&
+          checkFilterMatchesConstant({
+            constantValue: constant.biome,
+            filterKey: "biome",
+          });
       if (filter.irrigation)
         filterFlag =
-          filterFlag && checkFilterMatchesConstant({ constantValue: constant.irrigation, filterKey: "irrigation" });
+          filterFlag &&
+          checkFilterMatchesConstant({
+            constantValue: constant.irrigation,
+            filterKey: "irrigation",
+          });
       if (filter.soil)
-        filterFlag = filterFlag && checkFilterMatchesConstant({ constantValue: constant.soil, filterKey: "soil" });
+        filterFlag =
+          filterFlag &&
+          checkFilterMatchesConstant({
+            constantValue: constant.soil,
+            filterKey: "soil",
+          });
       if (filter.cultivationSystem)
         filterFlag =
           filterFlag &&
-          checkFilterMatchesConstant({ constantValue: constant.cultivationSystem, filterKey: "cultivationSystem" });
+          checkFilterMatchesConstant({
+            constantValue: constant.cultivationSystem,
+            filterKey: "cultivationSystem",
+          });
       return filterFlag;
     });
   }
 
   return (
     <>
-      <Button onPress={() => setOpen(true)} type="clear" icon={{ name: "edit", type: "material" }} />
+      <Button
+        onPress={() => setOpen(true)}
+        type="clear"
+        icon={{
+          name: "edit",
+          type: "font-awesome",
+          color: theme.colors.primary,
+        }}
+      />
       <ReactNativeModal
         isVisible={isOpen}
         style={{ margin: theme.spacing.md }}
@@ -76,10 +109,35 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
         onBackButtonPress={closeModal}
         onBackdropPress={closeModal}
       >
-        <View style={styles.container}>
-          <Text h4 style={{ textAlign: "center", paddingHorizontal: theme.spacing.lg }}>
-            Escolher fator de conversão - {PPL_CONSTANTS_PT_BR[constantType]}
-          </Text>
+        <View style={[styles.container, { paddingTop: theme.spacing.xl }]}>
+          <View
+            style={{
+              width: "100%",
+              borderBottomColor: theme.colors.grey1,
+              borderBottomWidth: 1,
+              paddingBottom: 12,
+            }}
+          >
+            <Text
+              h4
+              style={{
+                textAlign: "center",
+                paddingHorizontal: theme.spacing.sm,
+                fontWeight: "normal",
+              }}
+            >
+              Escolher fator de conversão
+            </Text>
+            <Text
+              h4
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              {PPL_CONSTANTS_PT_BR[constantType]}
+            </Text>
+          </View>
 
           <Filter constants={constants} filter={filter} onChange={setFilter} />
 
@@ -87,39 +145,47 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
             {getConstantsListFiltered().map((constant) => (
               <View key={constant.id} style={styles.constantCard}>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Valor:</Text>
-                  <Text style={{ fontWeight: "bold", fontSize: 16 }}>{constant.value}</Text>
+                  <Text style={styles.infoResult}>Valor:</Text>
+                  <Text style={{ fontSize: 16 }}>{constant.value}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Clima:</Text>
-                  <Text style={{ fontSize: 16 }}>{CLIMATES_TO_PT_BR[constant.climate]}</Text>
+                  <Text style={styles.infoResult}>Clima:</Text>
+                  <Text style={{ fontSize: 16 }}>
+                    {CLIMATES_TO_PT_BR[constant.climate]}
+                  </Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Bioma:</Text>
+                  <Text style={styles.infoResult}>Bioma:</Text>
                   <Text style={{ fontSize: 16 }}>{constant.biome}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>País:</Text>
+                  <Text style={styles.infoResult}>País:</Text>
                   <Text style={{ fontSize: 16 }}>{constant.country}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Solo:</Text>
-                  <Text style={{ fontSize: 16 }}>{SOILS_TO_PT_BR[constant.soil]}</Text>
+                  <Text style={styles.infoResult}>Solo:</Text>
+                  <Text style={{ fontSize: 16 }}>
+                    {SOILS_TO_PT_BR[constant.soil]}
+                  </Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Irrigação:</Text>
-                  <Text style={{ fontSize: 16 }}>{IRRIGATIONS_TO_PT_BR[constant.irrigation]}</Text>
+                  <Text style={styles.infoResult}>Irrigação:</Text>
+                  <Text style={{ fontSize: 16 }}>
+                    {IRRIGATIONS_TO_PT_BR[constant.irrigation]}
+                  </Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Sistema de cultivo:</Text>
-                  <Text style={{ fontSize: 16 }}>{CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem]}</Text>
+                  <Text style={styles.infoResult}>Sistema de cultivo:</Text>
+                  <Text style={{ fontSize: 16 }}>
+                    {CULTIVATION_SYSTEMS_TO_PT_BR[constant.cultivationSystem]}
+                  </Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Referência:</Text>
+                  <Text style={styles.infoResult}>Referência:</Text>
                   <Text style={{ fontSize: 16 }}>{constant.reference}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Observação:</Text>
+                  <Text style={styles.infoResult}>Observação:</Text>
                   <Text style={{ fontSize: 16 }}>{constant.comment}</Text>
                 </View>
 
@@ -130,6 +196,7 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
                     closeModal();
                   }}
                   type="clear"
+                  titleStyle={{ fontWeight: "bold" }}
                 >
                   Selecionar fator de conversão
                 </Button>
@@ -137,11 +204,18 @@ export function ConstantSelector({ constantType, constants, onChange }: Props) {
             ))}
 
             {getConstantsListFiltered().length === 0 && (
-              <Text style={{ textAlign: "center", fontSize: 16 }}>Nenhuma fator de conversão encontrado...</Text>
+              <Text style={{ textAlign: "center", fontSize: 16 }}>
+                Nenhuma fator de conversão encontrado...
+              </Text>
             )}
           </ScrollView>
 
-          <Button onPress={closeModal} type="clear" style={styles.closeBtn} titleStyle={{ color: theme.colors.grey0 }}>
+          <Button
+            onPress={closeModal}
+            type="clear"
+            style={styles.closeBtn}
+            titleStyle={{ color: theme.colors.grey1, fontWeight: "bold" }}
+          >
             Fechar
           </Button>
         </View>
@@ -156,16 +230,21 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    height: "100%",
+    height: "90%",
     gap: theme.spacing.lg,
   },
   constantCard: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    backgroundColor: theme.colors.grey0,
+    backgroundColor: theme.colors.grey5,
     width: "100%",
     marginBottom: theme.spacing.md,
     borderRadius: 10,
+  },
+  infoResult: {
+    fontWeight: "bold",
+    color: theme.colors.grey0,
+    fontSize: 16,
   },
   infoContainer: {
     flexDirection: "row",
